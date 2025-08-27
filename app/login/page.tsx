@@ -8,7 +8,7 @@ import {
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Button } from '../ui/button';
 import Form from 'next/form';
-import { login, createPost } from '@/app/lib/admin';
+import { login } from '@/app/lib/admin';
 import { useActionState } from 'react';
 
 
@@ -21,62 +21,54 @@ export default function LoginForm() {
   const [state, formAction, pending] = useActionState(login, initialState)
 
   return (
-    <Form action={formAction} className="space-y-3">
-      <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
-        <h1 className={`${lusitana.className} mb-3 text-2xl`}>
-          Please log in to continue.
-          {state?.message && <p aria-live="polite">{state.message}</p>}
-        </h1>
-        <div className="w-full">
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
+      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
+        <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
+          Admin Login
+        </h2>
+        <Form action={formAction} className="space-y-4">
           <div>
-            <label
-              className="mb-3 mt-5 block text-xs font-medium text-gray-900"
-              htmlFor="email"
-            >
+            <label className="block text-sm font-medium text-gray-700">
               Email
             </label>
-            <div className="relative">
-              <input
-                className={`peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500 ${state?.email ? 'border-red-500' : ''}`}
-                id="email"
-                type="email"
-                name="email"
-                placeholder="Enter your email address"
-                required
-              />
-              <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
-            {state?.email && <p aria-live="polite">{state.email}</p>}
+            <input
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+              required
+            />
           </div>
-          <div className="mt-4">
-            <label
-              className="mb-3 mt-5 block text-xs font-medium text-gray-900"
-              htmlFor="password"
-            >
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
               Password
             </label>
-            <div className="relative">
-              <input
-                className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-                id="password"
-                type="password"
-                name="password"
-                placeholder="Enter password"
-                required
-                // minLength={6}
-              />
-              <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
+            <input
+              name="password"
+              type="password"
+              placeholder="••••••••"
+              className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+              required
+            />
           </div>
-        </div>
-        <Button className="mt-4 w-full" disabled={pending}>
-          Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
-        </Button>
-        {/* <button className='mt-4 w-full' disabled={pending}>Create Post</button> */}
-        <div className="flex h-8 items-end space-x-1">
-          {/* Add form errors here */}
-        </div>
+          {state?.message && <p aria-live="polite">{state.message}</p>}
+          {/* <button
+            type="submit"
+            className="w-full rounded-md bg-gray-600 py-2 px-4 text-white hover:bg-gray-700 focus:outline-none"
+          >
+            Log In
+          </button> */}
+          <Button className="w-full rounded-md bg-gray-600 py-2 px-4 text-white hover:bg-gray-700 focus:outline-none" disabled={pending}>
+            Log in
+          </Button>
+        </Form>
+        {/* <p className="mt-4 text-center text-sm text-gray-600">
+          Don't have an account?{" "}
+          <a href="/register" className="text-gray-600 hover:underline">
+            Sign up
+          </a>
+        </p> */}
       </div>
-    </Form>
+    </div>
   );
 }
