@@ -12,3 +12,9 @@ export async function addSpaceRepo(Space: any) {
     `;
     return { message: 'Space added successfully', db: insertSpace }; 
 }
+
+export async function getAllSpaces() {
+    const sql = postgres(process.env.POSTGRES_URL!, { ssl: false });
+    const spaces = await sql`SELECT * FROM spaces ORDER BY id DESC`;
+    return spaces;
+}

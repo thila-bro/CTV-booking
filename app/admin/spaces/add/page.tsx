@@ -4,6 +4,7 @@ import {
     AtSymbolIcon,
     KeyIcon,
     ExclamationCircleIcon,
+    CheckCircleIcon
 } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 // import { Button } from '../ui/button';
@@ -13,20 +14,21 @@ import { addSpace } from '../action';
 
 
 const initialState = {
+    success: false,
     message: '',
     email: ''
 }
 
 export default function LoginForm() {
     const [state, formAction, pending] = useActionState(addSpace, initialState)
-
+    console.log("form state: ", state);
     return (
         <Form action={formAction}
             className="max-w-auto  bg-white p-8 rounded-lg shadow space-y-6"
             // onsubmit="return validateForm()"
             
         >
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Add Product</h2>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Add Space</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 
@@ -83,12 +85,21 @@ export default function LoginForm() {
                 <p className="text-xs text-gray-500 mt-1">You can upload multiple images (PNG, JPG, etc.)</p>
             </div>
 
-            {state?.message && (
-                <div className="flex items-center text-red-600 mt-2">
+            {state?.message && !state?.success && (
+                <div className="flex mt-2 items-center text-red-600 ">
                     <ExclamationCircleIcon className="h-5 w-5 mr-2" />
                     <p aria-live="polite">{state.message}</p>
                 </div>
             )}
+
+            {state?.success && (
+                <div className="flex mt-2 items-center text-green-600 ">
+                    <CheckCircleIcon className="h-5 w-5 mr-2" />
+                    <p aria-live="polite">{state.message}</p>
+                </div>
+            )}
+
+            
             <div className="pt-4">
                 <button
                     type="submit"
