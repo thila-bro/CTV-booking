@@ -126,6 +126,17 @@ async function seedRevenue() {
   return insertedRevenue;
 }
 
+async function seedSpaces() {
+  await sql `
+    CREATE TABLE IF NOT EXISTS spaces (
+      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      price INT NOT NULL
+    );
+  `;
+  return;
+}
+
 export async function GET() {
   try {
     const result = await sql.begin((sql) => [
@@ -134,6 +145,7 @@ export async function GET() {
       seedCustomers(),
       seedInvoices(),
       seedRevenue(),
+      seedSpaces(),
     ]);
 
     return Response.json({ message: 'Database seeded successfully' });

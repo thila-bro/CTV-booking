@@ -8,8 +8,8 @@ import {
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 // import { Button } from '../ui/button';
 import Form from 'next/form';
-import { login } from '@/app/lib/admin';
 import { useActionState } from 'react';
+import { addSpace } from '../action';
 
 
 const initialState = {
@@ -18,10 +18,10 @@ const initialState = {
 }
 
 export default function LoginForm() {
-    const [state, formAction, pending] = useActionState(login, initialState)
+    const [state, formAction, pending] = useActionState(addSpace, initialState)
 
     return (
-        <form
+        <Form action={formAction}
             className="max-w-auto  bg-white p-8 rounded-lg shadow space-y-6"
             // onsubmit="return validateForm()"
             
@@ -38,7 +38,7 @@ export default function LoginForm() {
                         type="text"
                         id="name"
                         name="name"
-                        required
+                        
                         className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring focus:border-blue-400"
                         placeholder="Enter product name"
                     />
@@ -54,8 +54,8 @@ export default function LoginForm() {
                         id="price"
                         name="price"
                         min="0"
-                        step="0.01"
-                        required
+                        step="1"
+                        
                         className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring focus:border-blue-400"
                         placeholder="Enter price"
                     />
@@ -73,7 +73,7 @@ export default function LoginForm() {
                     name="images"
                     accept="image/*"
                     multiple
-                    required
+                    
                     className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
              file:rounded-md file:border-0
              file:text-sm file:font-semibold
@@ -83,7 +83,12 @@ export default function LoginForm() {
                 <p className="text-xs text-gray-500 mt-1">You can upload multiple images (PNG, JPG, etc.)</p>
             </div>
 
-            
+            {state?.message && (
+                <div className="flex items-center text-red-600 mt-2">
+                    <ExclamationCircleIcon className="h-5 w-5 mr-2" />
+                    <p aria-live="polite">{state.message}</p>
+                </div>
+            )}
             <div className="pt-4">
                 <button
                     type="submit"
@@ -92,7 +97,7 @@ export default function LoginForm() {
                     Submit
                 </button>
             </div>
-        </form>
+        </Form>
 
 
     );

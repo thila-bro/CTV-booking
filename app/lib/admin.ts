@@ -58,7 +58,7 @@ export async function login(prevState: any, formData: FormData) {
         }
     }
 
-    redirect('/dashboard');
+    redirect('/admin');
 }
 
 export async function logout() {
