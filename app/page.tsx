@@ -1,57 +1,102 @@
-import AcmeLogo from '@/app/ui/acme-logo';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
-import Image from 'next/image';
-import styles from '@/app/ui/home.module.css';
-import { lusitana } from '@/app/ui/fonts';
-
-export default function Page() {
+// app/page.jsx (Next.js 13+ with App Router)
+export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col p-6">
-      {/* <div className={styles.shape} /> */}
-      <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
-        <AcmeLogo />
-        {/* <div
-          className="relative w-0 h-0 border-l-[15px] border-r-[15px] border-b-[26px] border-l-transparent border-r-transparent border-b-black"
-        /> */}
-      </div>
-      <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
-        <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
-          <p className={`text-xl text-gray-800 md:text-3xl md:leading-normal`}>
-            <strong>Welcome to Acme.</strong> This is the example for the{' '}
-            <p
-              className={`${lusitana.className} text-xl text-gray-800 md:text-3xl md:leading-normal`}
-            />
-            <a href="https://nextjs.org/learn/" className="text-blue-500">
-              Next.js Learn Course
-            </a>
-            , brought to you by Vercel.
-          </p>
-          <Link
-            href="/login"
-            className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
-          >
-            <span>Log in</span> <ArrowRightIcon className="w-5 md:w-6" />
-          </Link>
+    <main className="min-h-screen bg-gray-50 text-gray-900">
+      {/* Hero Section */}
+      <section className="relative flex flex-col items-center justify-center text-center px-6 py-24 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+        <h1 className="text-5xl font-bold mb-4">Find Your Perfect Space</h1>
+        <p className="max-w-2xl mb-6 text-lg">
+          Rent coworking spaces, meeting rooms, or event halls with ease and flexibility.
+        </p>
+        <div className="flex space-x-4">
+          <button className="px-6 py-3 bg-white text-indigo-600 font-semibold rounded-xl shadow hover:bg-gray-100">
+            Book Now
+          </button>
+          {/* <button className="px-6 py-3 border border-white rounded-xl hover:bg-white/20">
+            Learn More
+          </button> */}
         </div>
-        <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
-          {/* Add Hero Images Here */}
-          <Image
-            src="/hero-desktop.png"
-            width={1000}
-            height={760}
-            className="hidden md:block"
-            alt="Screenshots of the dashboard project showing desktop version"
-          />
-          <Image
-            src="/hero-mobile.png"
-            width={300}
-            height={600}
-            className="md:hidden"
-            alt="Screenshots of the dashboard project showing mobile version"
-          />
+      </section>
+
+      {/* Features Section */}
+      {/* <section className="py-20 px-6 max-w-6xl mx-auto">
+        <h2 className="text-3xl font-bold text-center mb-12">Why Choose Us?</h2>
+        <div className="grid md:grid-cols-3 gap-10">
+          <div className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition">
+            <h3 className="text-xl font-semibold mb-3">Flexible Booking</h3>
+            <p>Book spaces by the hour, day, or month – whatever suits your needs.</p>
+          </div>
+          <div className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition">
+            <h3 className="text-xl font-semibold mb-3">Prime Locations</h3>
+            <p>Choose from a wide range of spaces across the city.</p>
+          </div>
+          <div className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition">
+            <h3 className="text-xl font-semibold mb-3">Affordable Pricing</h3>
+            <p>Get premium spaces at competitive prices with no hidden costs.</p>
+          </div>
         </div>
-      </div>
+      </section> */}
+
+      {/* Featured Spaces Section */}
+      <section className="py-20 bg-gray-100 px-6">
+        <h2 className="text-3xl font-bold text-center mb-12">Featured Spaces</h2>
+        <div className="grid md:grid-cols-4 gap-8 max-w-7xl mx-auto">
+          {[
+            {
+              img: "/sample.avif",
+              title: "Modern Coworking Hub",
+              details: "Downtown • From $20/hr",
+            },
+            {
+              img: "/sample.avif",
+              title: "Creative Studio",
+              details: "Arts District • From $35/hr",
+            },
+            {
+              img: "/sample.avif",
+              title: "Event Conference Hall",
+              details: "City Center • From $100/hr",
+            },
+            {
+              img: "/sample.avif",
+              title: "Private Meeting Room",
+              details: "Business Park • From $15/hr",
+            },
+          ].map((space, idx) => (
+            <div
+              key={idx}
+              className="bg-white rounded-2xl shadow overflow-hidden flex flex-col"
+            >
+              <img
+                src={space.img}
+                alt={space.title}
+                className="w-full h-48 object-cover"
+              />
+              <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-lg font-semibold mb-2">{space.title}</h3>
+                <p className="text-sm text-gray-600 mb-4">{space.details}</p>
+                <button className="mt-auto px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                  Book Now
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 text-center px-6">
+        <h2 className="text-3xl font-bold mb-4">Ready to Book Your Space?</h2>
+        <p className="mb-6 text-lg">Find and book the perfect spot in minutes.</p>
+        <button className="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-xl shadow hover:bg-indigo-700">
+          Get Started
+        </button>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-10 bg-gray-900 text-gray-400 text-center">
+        <p>&copy; {new Date().getFullYear()} SpaceRent. All rights reserved.</p>
+      </footer>
     </main>
   );
 }

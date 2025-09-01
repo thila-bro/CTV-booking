@@ -15,7 +15,7 @@ export async function register(formData: FormData) {
         throw new Error('Email and password are required and must be strings.');
     }
 
-    console.log('Registering user:', { email, password })
+    // console.log('Registering user:', { email, password })
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const insertedAdmin = await sql`
@@ -31,7 +31,7 @@ export async function login(prevState: any, formData: FormData) {
     const password = formData.get('password');
 
     if (typeof email !== 'string' || typeof password !== 'string') {
-        return { 
+        return {
             message: 'Invalid input. Email and password are required and must be strings.',
         }
     }
@@ -42,7 +42,7 @@ export async function login(prevState: any, formData: FormData) {
 
     if (!admin) {
         // throw new Error('No user found with this email.');
-        return { 
+        return {
             message: 'No user found with this email.'
         }
     }
@@ -51,8 +51,8 @@ export async function login(prevState: any, formData: FormData) {
 
     if (!isPasswordValid) {
         // throw new Error('Invalid password.');
-        return { 
-            message: 'Invalid password.', 
+        return {
+            message: 'Invalid password.',
             email: "email not found",
             // data: formData
         }

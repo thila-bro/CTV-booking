@@ -1,9 +1,5 @@
 import { getAllSpaces } from '@/repositories/spaces';
 import Link from 'next/link';
-import {
-    TrashIcon,
-    PencilIcon,
-} from '@heroicons/react/24/outline';
 
 export default async function Page() {
     const spaces = await getAllSpaces();
@@ -54,17 +50,17 @@ export default async function Page() {
                                 <td className="px-4 py-2 border-b">
                                     <div className='flex'>
                                         <button
-                                            // onClick={() => handleDelete(space.id)}
-                                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                                        >
-                                            <TrashIcon className="w-5 h-5" />
-                                        </button>
-                                        <button
-                                            // onClick={() => handleEdit(space.id)}
-                                            className="ml-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                                        >
-                                            <PencilIcon className="w-5 h-5" />
-                                        </button>
+                                        // onClick={() => handleDelete(space.id)}
+                                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700" 
+                                    >
+                                        Delete
+                                    </button>
+                                    <button
+                                        // onClick={() => handleEdit(space.id)}
+                                        className="ml-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"        
+                                    >
+                                        Edit
+                                    </button>
                                     </div>
                                 </td>
                             </tr>

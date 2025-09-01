@@ -1,30 +1,30 @@
 'use client'
-import { lusitana } from '@/app/ui/fonts';
+
 import {
-  AtSymbolIcon,
-  KeyIcon,
+  CheckCircleIcon,
   ExclamationCircleIcon,
 } from '@heroicons/react/24/outline';
-import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Button } from '@/app/ui/button';
 import Form from 'next/form';
-import { login } from '@/app/lib/admin';
+import { loginUser } from '../action';
 import { useActionState } from 'react';
 
 
 const initialState = {
+  success: false,
   message: '',
-  email: ''
+  email: '',
+  data: []
 }
 
-export default function AdminLoginForm() {
-  const [state, formAction, pending] = useActionState(login, initialState)
+export default function LoginForm() {
+  const [state, formAction, pending] = useActionState(loginUser, initialState)
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
         <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
-          Admin Login
+          User Login
         </h2>
         <Form action={formAction} className="space-y-4">
           <div>
@@ -36,7 +36,8 @@ export default function AdminLoginForm() {
               type="email"
               placeholder="you@example.com"
               className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
-              required
+              defaultValue={state?.data?.email?.toString()}
+
             />
           </div>
           <div>
@@ -48,26 +49,27 @@ export default function AdminLoginForm() {
               type="password"
               placeholder="••••••••"
               className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
-              required
+
             />
           </div>
-          {state?.message && <p aria-live="polite">{state.message}</p>}
-          {/* <button
-            type="submit"
-            className="w-full rounded-md bg-gray-600 py-2 px-4 text-white hover:bg-gray-700 focus:outline-none"
-          >
-            Log In
-          </button> */}
+
+          {state?.message && !state?.success && (
+            <div className="flex mt-2 items-center text-red-600 ">
+              <ExclamationCircleIcon className="h-5 w-5 mr-2" />
+              <p aria-live="polite">{state.message}</p>
+            </div>
+          )}
+
+          {state?.success && (
+            <div className="flex mt-2 items-center text-green-600 ">
+              <CheckCircleIcon className="h-5 w-5 mr-2" />
+              <p aria-live="polite">{state.message}</p>
+            </div>
+          )}
           <Button className="w-full rounded-md bg-gray-600 py-2 px-4 text-white hover:bg-gray-700 focus:outline-none" disabled={pending}>
             Log in
           </Button>
         </Form>
-        {/* <p className="mt-4 text-center text-sm text-gray-600">
-          Don't have an account?{" "}
-          <a href="/register" className="text-gray-600 hover:underline">
-            Sign up
-          </a>
-        </p> */}
       </div>
     </div>
   );

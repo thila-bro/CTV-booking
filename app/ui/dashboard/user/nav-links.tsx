@@ -1,10 +1,9 @@
 'use client';
 
 import {
-  UserGroupIcon,
   HomeIcon,
-  DocumentDuplicateIcon,
-  BriefcaseIcon,
+  ClipboardDocumentCheckIcon,
+  DocumentCurrencyDollarIcon,
 } from '@heroicons/react/24/outline';
 
 import Link from 'next/link';
@@ -15,23 +14,23 @@ import React, { useState as reactUseState } from 'react';
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
-  { name: 'Home', href: '/admin', icon: HomeIcon },
+  { name: 'Home', href: '/user', icon: HomeIcon },
   {
     name: 'Invoices',
-    href: '/admin/invoices',
-    icon: DocumentDuplicateIcon,
+    href: '/user/invoices',
+    icon: DocumentCurrencyDollarIcon,
   },
-  { name: 'Customers', href: '/admin/customers', icon: UserGroupIcon },
-  {
-    name: 'Spaces',
-    href: '/admin/spaces',
-    icon: BriefcaseIcon,
-    children: [
-      { name: 'Add Spaces', href: '/admin/spaces/add' },
-      { name: 'All Spaces', href: '/admin/spaces' },
-    ],
+  { name: 'Bookings', href: '/user/bookings', icon: ClipboardDocumentCheckIcon },
+  // {
+  //   name: 'Spaces',
+  //   href: '/admin/spaces',
+  //   icon: BriefcaseIcon,
+  //   children: [
+  //     { name: 'Add Spaces', href: '/admin/spaces/add' },
+  //     { name: 'All Spaces', href: '/admin/spaces' },
+  //   ],
 
-  },
+  // },
 ];
 
 export default function NavLinks() {
@@ -113,7 +112,7 @@ export default function NavLinks() {
                             },
                           )}
                         >
-                          
+
                           {child.name}
                         </Link>
                       </li>
