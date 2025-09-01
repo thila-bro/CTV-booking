@@ -127,7 +127,7 @@ async function seedRevenue() {
 }
 
 async function seedSpaces() {
-  await sql `
+  await sql`
     CREATE TABLE IF NOT EXISTS spaces (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       name VARCHAR(255) NOT NULL,

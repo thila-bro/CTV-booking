@@ -12,7 +12,6 @@ export async function addSpace(prevState: any, formData: FormData) {
     const price = formData.get('price');
     const images = formData.getAll('images') as File[];
 
-
     if (typeof name !== 'string' || typeof price !== 'string' || name.trim() === '' || price.trim() === '') {
         return {
             message: 'Invalid input. Name and price are required.',
