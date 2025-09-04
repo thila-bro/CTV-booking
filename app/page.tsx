@@ -1,4 +1,8 @@
 // app/page.jsx (Next.js 13+ with App Router)
+import Link from 'next/link';
+import PublishedSpacesList from './ui/root/spaces';
+
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-gray-50 text-gray-900">
@@ -9,9 +13,9 @@ export default function Home() {
           Rent coworking spaces, meeting rooms, or event halls with ease and flexibility.
         </p>
         <div className="flex space-x-4">
-          <button className="px-6 py-3 bg-white text-indigo-600 font-semibold rounded-xl shadow hover:bg-gray-100">
+          <Link href='/user/login' className="px-6 py-3 bg-white text-indigo-600 font-semibold rounded-xl shadow hover:bg-gray-100">
             Book Now
-          </button>
+          </Link>
           {/* <button className="px-6 py-3 border border-white rounded-xl hover:bg-white/20">
             Learn More
           </button> */}
@@ -38,7 +42,8 @@ export default function Home() {
       </section> */}
 
       {/* Featured Spaces Section */}
-      <section className="py-20 bg-gray-100 px-6">
+      <PublishedSpacesList />
+      {/* <section className="py-20 bg-gray-100 px-6">
         <h2 className="text-3xl font-bold text-center mb-12">Featured Spaces</h2>
         <div className="grid md:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {[
@@ -82,7 +87,7 @@ export default function Home() {
             </div>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* CTA Section */}
       <section className="py-20 text-center px-6">

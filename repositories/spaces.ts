@@ -12,8 +12,20 @@ export async function addSpaceRepo(Space: any) {
     return { message: 'Space added successfully', db: insertSpace };
 }
 
-export async function getAllSpaces() {
+export async function getAllSpacesRepo() {
     // const sql = postgres(process.env.POSTGRES_URL!, { ssl: false });
     const spaces = await sql`SELECT * FROM spaces ORDER BY id DESC`;
     return spaces;
+}
+
+export async function deleteSpaceRepo(spaceId: string) {
+    // const sql = postgres(process.env.POSTGRES_URL!, { ssl: false });
+    await sql`DELETE FROM space_images WHERE space_id = ${spaceId} `;
+    await sql`DELETE FROM spaces WHERE id = ${spaceId} `;
+    return { success: true };
+}
+
+export async function updateSpaceRepo(Space: any) {
+    await sql `UPDATE spaces SET name=${Space.name}, price=${Space.price} WHERE id=${Space.id}`;
+    return { success: true }
 }
