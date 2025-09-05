@@ -1,14 +1,7 @@
 'use client'
-import { lusitana } from '@/app/ui/fonts';
-import {
-  AtSymbolIcon,
-  KeyIcon,
-  ExclamationCircleIcon,
-} from '@heroicons/react/24/outline';
-import { ArrowRightIcon } from '@heroicons/react/20/solid';
+
 import { Button } from '@/app/ui/button';
 import Form from 'next/form';
-import { login } from '@/app/lib/admin';
 import { useActionState } from 'react';
 import { AdminLogin } from './action';
 
@@ -42,7 +35,6 @@ export default function AdminLoginForm() {
             {state?.errors?.email && (
               <p className="text-red-500">{state.errors.email}</p>
             )}
-            {/* {state?.message?.email && (<p aria-live="polite">{state.message?.email}</p>)} */}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -60,7 +52,6 @@ export default function AdminLoginForm() {
             <p className="text-red-500">{state.errors.password}</p>
           )}
           {state?.message && <p className="text-red-500">{state.message}</p>}
-
           <Button className="w-full rounded-md bg-gray-600 py-2 px-4 text-white hover:bg-gray-700 focus:outline-none" disabled={pending}>
             Log in
           </Button>

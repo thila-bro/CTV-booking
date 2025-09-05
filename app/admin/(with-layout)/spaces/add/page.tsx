@@ -1,14 +1,9 @@
 'use client'
-import { lusitana } from '@/app/ui/fonts';
+
 import {
-    AtSymbolIcon,
-    KeyIcon,
     ExclamationCircleIcon,
     CheckCircleIcon
 } from '@heroicons/react/24/outline';
-import { ArrowRightIcon } from '@heroicons/react/20/solid';
-// import { Button } from '../ui/button';
-import Form from 'next/form';
 import { useActionState } from 'react';
 import { addSpace } from '../action';
 
@@ -25,10 +20,10 @@ export default function AddSpaceForm() {
 
 
     return (
-        <Form action={formAction}
+        <form action={formAction}
             className="max-w-auto  bg-white p-8 rounded-lg shadow space-y-6"
         // onsubmit="return validateForm()"
-
+            encType="multipart/form-data"
         >
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Add Space</h2>
 
@@ -121,7 +116,7 @@ export default function AddSpaceForm() {
                     Submit
                 </button>
             </div>
-        </Form>
+        </form>
 
 
     );

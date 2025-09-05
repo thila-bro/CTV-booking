@@ -2,7 +2,10 @@
 
 import { addUserRepo, findUserByEmail } from '@/repositories/users';
 import bcrypt from 'bcrypt';
-import { redirect } from 'next/navigation';
+import { redirect, RedirectType } from 'next/navigation';
+import { UserSchema } from '@/models/User';
+import { UserLoginSchema } from '@/models/UserLogin';
+import { createSession, deleteSession } from '@/lib/session';
 
 export async function addUser(prevState: any, formData: FormData) {
     const firstName = formData.get('firstName');
@@ -10,20 +13,16 @@ export async function addUser(prevState: any, formData: FormData) {
     const email = formData.get('email');
     const mobile = formData.get('mobile');
     const password = formData.get('password');
-    const rePassword = formData.get('rePassword');
+    const confirmPassword = formData.get('confirmPassword');
 
-    if (typeof firstName !== 'string' || typeof lastName !== 'string' || typeof email !== 'string' || typeof mobile !== 'string' || typeof password !== 'string' || typeof rePassword !== 'string' || firstName.trim() === '' || lastName.trim() === '' || email.trim() === '' || mobile.trim() === '' || password.trim() === '' || rePassword.trim() === '') {
-        return {
-            message: 'Invalid input. All fields are required.',
-            data: Object.fromEntries(formData)
-        }
-    }
+    const validationResult = UserSchema.safeParse({ firstName, lastName, email, mobile, password, confirmPassword });
 
-    if (password !== rePassword) {
-        return {
-            message: 'Passwords do not match.',
-            data: Object.fromEntries(formData)
-        }
+    if (!validationResult.success) {
+        console.error('Validation errors:', validationResult.error.flatten().fieldErrors);
+        return { 
+            errors: validationResult.error.flatten().fieldErrors, 
+            data: Object.fromEntries(formData) 
+        };
     }
 
     // Add user to the database (pseudo code)
@@ -41,14 +40,17 @@ export async function addUser(prevState: any, formData: FormData) {
 export async function loginUser(prevState: any, formData: FormData) {
     const email = formData.get('email');
     const password = formData.get('password');
+    const validationResult = UserLoginSchema.safeParse({ email, password });
 
-    if (typeof email !== 'string' || typeof password !== 'string' || email.trim() === '' || password.trim() === '') {
-        return {
-            message: 'Email and password are required.',
-        }
+    if (!validationResult.success) {
+        console.error('Validation errors:', validationResult.error.flatten().fieldErrors);
+        return {    
+            errors: validationResult.error.flatten().fieldErrors,
+            data: Object.fromEntries(formData)
+        };
     }
 
-    const user = await findUserByEmail(email);
+    const user = email && typeof email === 'string' ? await findUserByEmail(email) : null;
 
     if (!user) {
         return {
@@ -56,7 +58,9 @@ export async function loginUser(prevState: any, formData: FormData) {
         }
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = password && typeof password === 'string' 
+        ? await bcrypt.compare(password, user.password) 
+        : false;
 
     if (!isPasswordValid) {
         // throw new Error('Invalid password.');
@@ -67,5 +71,12 @@ export async function loginUser(prevState: any, formData: FormData) {
         }
     }
 
-    redirect('/user');
+    await createSession(user.id, 'user');
+    redirect('/user', RedirectType.replace);
+}
+
+export async function logoutUser() {
+    await deleteSession("user");
+    // await deleteSession("user");
+    return;
 }

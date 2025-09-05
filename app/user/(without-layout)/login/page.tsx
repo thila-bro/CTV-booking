@@ -39,6 +39,9 @@ export default function LoginForm() {
               defaultValue={state?.data?.email?.toString()}
 
             />
+            {state?.errors?.email && (
+              <p className="text-red-500">{state.errors.email}</p>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -51,18 +54,14 @@ export default function LoginForm() {
               className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
 
             />
+            {state?.errors?.password && (
+              <p className="text-red-500">{state.errors.password}</p>
+            )}
           </div>
 
           {state?.message && !state?.success && (
             <div className="flex mt-2 items-center text-red-600 ">
-              <ExclamationCircleIcon className="h-5 w-5 mr-2" />
-              <p aria-live="polite">{state.message}</p>
-            </div>
-          )}
-
-          {state?.success && (
-            <div className="flex mt-2 items-center text-green-600 ">
-              <CheckCircleIcon className="h-5 w-5 mr-2" />
+              {/* <ExclamationCircleIcon className="h-5 w-5 mr-2" /> */}
               <p aria-live="polite">{state.message}</p>
             </div>
           )}

@@ -18,7 +18,7 @@ export async function addSpace(prevState: any, formData: FormData) {
     if (!validationResult.success) {
         return { errors: validationResult.error.flatten().fieldErrors, data: Object.fromEntries(formData) };
     }
-    
+
     const name = formData.get('name');
     const price = formData.get('price');
     const images = formData.getAll('images') as File[];
@@ -38,7 +38,7 @@ export async function addSpace(prevState: any, formData: FormData) {
     const response = await addSpaceRepo({ name, price });
 
     if (response?.db?.id) {
-        const uploadDir = path.join(process.cwd(), 'public',  `${spacesImageDir}`, response.db.id);
+        const uploadDir = path.join(process.cwd(), 'public', `${spacesImageDir}`, response.db.id);
         await fs.mkdir(uploadDir, { recursive: true });
 
         const imagePaths: string[] = [];

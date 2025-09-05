@@ -1,7 +1,7 @@
 "use server";
 
 import { createSession, deleteSession } from "@/lib/session";
-import { AdminSchema } from "@/models/Admin";
+import { AdminLoginSchema } from "@/models/AdminLogin";
 import { findAdminByEmailRepo } from "@/repositories/admin";
 import bcrypt from 'bcrypt';
 import { redirect, RedirectType } from 'next/navigation';
@@ -9,7 +9,7 @@ import { redirect, RedirectType } from 'next/navigation';
 
 
 export async function AdminLogin(prevState: any, formData: FormData) {
-    const result = AdminSchema.safeParse(Object.fromEntries(formData));
+    const result = AdminLoginSchema.safeParse(Object.fromEntries(formData));
     if (!result.success) {
         return { errors: result.error.flatten().fieldErrors };
     }
@@ -27,11 +27,11 @@ export async function AdminLogin(prevState: any, formData: FormData) {
         return { message: "Invalid password." };
     }
 
-    await createSession(admin.id);
+    await createSession(admin.id, 'admin');
     redirect('/admin', RedirectType.replace);
 }
 
 export async function AdminLogout() {
-    await deleteSession();
+    await deleteSession("admin");
     return;
 }

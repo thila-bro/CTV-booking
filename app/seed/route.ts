@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import postgres from 'postgres';
-import { invoices, customers, revenue, users } from '../lib/placeholder-data';
+import { invoices, customers, revenue, Admin } from '../lib/placeholder-data';
 
 // const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: false }); // ssl should be true for live, false for local dev
@@ -97,7 +97,7 @@ async function seedAdmins() {
   `;
 
   const insertedAdmins = await Promise.all(
-    users.map(async (user) => {
+    Admin.map(async (user) => {
       const hashedPassword = await bcrypt.hash(user.password, 10);
       return sql`
         INSERT INTO admins (id, name, email, password)
@@ -140,31 +140,33 @@ async function seedSpaces() {
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `;
-  return;
 }
 
 async function seedSpaceImages() {
+  await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`; // Ensure the extension is created
+
   await sql`
     CREATE TABLE IF NOT EXISTS space_images (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       space_id UUID REFERENCES spaces(id),
-      image_url VARCHAR(255) NOT NULL
+      image_url VARCHAR(255) NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `;
-  return;
 }
 
 export async function GET() {
   try {
-    const result = await sql.begin((sql) => [
+    const result = await sql.begin(async (sql) => [
+      await seedSpaces(),
+      seedSpaceImages(),
       seedUsers(),
       seedAdmins(),
       // seedCustomers(),
       // seedInvoices(),
       // seedRevenue(),
-      seedSpaces(),
-      seedSpaceImages(),
+      // seedSpaces(),
+      // seedSpaceImages(),
     ]);
 
     return Response.json({ message: 'Database seeded successfully' });
