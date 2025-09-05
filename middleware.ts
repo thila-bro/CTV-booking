@@ -1,48 +1,39 @@
 // middleware.ts
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-
-export function middleware(request: NextRequest) {
-    const someData = 'This is data from middleware';
+import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from "next/server";
+import { decrypt } from '@/lib/session';
 
 
-    const headers = new Headers(request.headers);
-    headers.set('x-current-path', request.nextUrl.pathname);
-    headers.set('x-middleware-data', someData);
-    // headers.set('x-custom-data', 'my-custom-value');
+const protectedRoutes = ["/admin", "/admin/invoices", "/admin/customers", "/admin/spaces", "/admin/spaces/add"];
+const adminPublicRoutes = ["/admin/login"];
 
-    return NextResponse.next({
-        headers,
-    });
+export async function middleware(request: NextRequest) {
+    const path = request.nextUrl.href;
+    const isProtectedRoute = protectedRoutes.includes(path);
+    // const isPublicRoute = path.endsWith(adminPublicRoutes);
+
+    const cookie = (await cookies()).get("AdminSession")?.value;
+    const session = await decrypt(cookie);
+
+    // check if the user is logged, if not redirect to login
+    // checking all the route under protectedRoutes
+    if (matchingRoutesInList(path, protectedRoutes) && !session?.userId) {
+        return NextResponse.redirect(new URL("/admin/login", request.nextUrl));
+    }
+
+    // check if the user is logged, if yes redirect to admin
+    // checking on all the route under adminPublicRoutes (eg login, register etc)
+    if (matchingRoutesInList(path, adminPublicRoutes) && session?.userId) {
+        return NextResponse.redirect(new URL("/admin", request.nextUrl));
+    }
+
+    return NextResponse.next();
 }
 
-export const config = {
-    // matcher: [
-    //     /*
-    //      * Match all request paths except for the ones starting with:
-    //      * - api (API routes)
-    //      * - _next/static (static files)
-    //      * - _next/image (image optimization files)
-    //      * - favicon.ico (favicon file)
-    //      */
-    //     '/((?!api|_next/static|_next/image|favicon.ico).*)',
-    // ],
+function matchingRoutesInList(url: string, list: string[]) {
+    const regex = new RegExp(`(${list.join('|')})$`);
 
-    matcher: [
-        /*
-         * Match all request paths except for the ones starting with:
-         * - api (API routes)
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
-         */
-        {
-            source:
-                '/((?!api|_next/static|_next/image|media|fonts|favicon.ico|favicon.png).*)',
-            missing: [
-                // Exclude Server Actions
-                { type: 'header', key: 'next-action' },
-            ],
-        },
-    ],
-};
+    if (regex.test(url)) {
+        return true;
+    }
+}

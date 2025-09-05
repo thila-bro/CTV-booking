@@ -10,6 +10,7 @@ import { Button } from '@/app/ui/button';
 import Form from 'next/form';
 import { login } from '@/app/lib/admin';
 import { useActionState } from 'react';
+import { AdminLogin } from './action';
 
 
 const initialState = {
@@ -18,7 +19,7 @@ const initialState = {
 }
 
 export default function AdminLoginForm() {
-  const [state, formAction, pending] = useActionState(login, initialState)
+  const [state, formAction, pending] = useActionState(AdminLogin, initialState)
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
@@ -36,8 +37,12 @@ export default function AdminLoginForm() {
               type="email"
               placeholder="you@example.com"
               className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
-              required
+
             />
+            {state?.errors?.email && (
+              <p className="text-red-500">{state.errors.email}</p>
+            )}
+            {/* {state?.message?.email && (<p aria-live="polite">{state.message?.email}</p>)} */}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -48,26 +53,19 @@ export default function AdminLoginForm() {
               type="password"
               placeholder="••••••••"
               className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
-              required
+
             />
           </div>
-          {state?.message && <p aria-live="polite">{state.message}</p>}
-          {/* <button
-            type="submit"
-            className="w-full rounded-md bg-gray-600 py-2 px-4 text-white hover:bg-gray-700 focus:outline-none"
-          >
-            Log In
-          </button> */}
+          {state?.errors?.password && (
+            <p className="text-red-500">{state.errors.password}</p>
+          )}
+          {state?.message && <p className="text-red-500">{state.message}</p>}
+
           <Button className="w-full rounded-md bg-gray-600 py-2 px-4 text-white hover:bg-gray-700 focus:outline-none" disabled={pending}>
             Log in
           </Button>
         </Form>
-        {/* <p className="mt-4 text-center text-sm text-gray-600">
-          Don't have an account?{" "}
-          <a href="/register" className="text-gray-600 hover:underline">
-            Sign up
-          </a>
-        </p> */}
+
       </div>
     </div>
   );

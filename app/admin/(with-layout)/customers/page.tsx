@@ -1,3 +1,7 @@
-export default function Page() {
-    return <p>Customers Page</p>;
+import React from 'react'
+
+export default function CustomerPage() {
+  return (
+    <div>CustomerPage</div>
+  )
 }

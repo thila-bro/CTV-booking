@@ -22,14 +22,24 @@ export default function Page(request: NextRequest) {
 
     // console.log("request headers: ", request.url);
 
-    const headersList = headers();
-    const pathname = headersList.get('x-current-path');
-    const id = pathname?.substring(pathname.lastIndexOf('/') + 1);
+    // const headersList = headers();
+    // const pathname = headersList.get('x-current-path');
+    // const id = pathname?.substring(pathname.lastIndexOf('/') + 1);
+
+    // const path = request.params;
+
+    // console.log("path: ", path);
+
+
+    // const id = path.substring(path.lastIndexOf('/') + 1);
+
+    // console.log("path: ", path);
+    // console.log("id: ", id);
 
 
 
-    const imagesDir = path.join(process.cwd(), "public", "spaces", id);
-    const images = fs.readdirSync(imagesDir);
+    // const imagesDir = path.join(process.cwd(), "public", "spaces", id);
+    // const images = fs.readdirSync(imagesDir);
 
     // console.log("image dir: ", imagesDir);
 
@@ -44,19 +54,22 @@ export default function Page(request: NextRequest) {
     //     props: { images }, // pass to component as props
     // };
 
+    return <>Testing</>;
 
 
-    return (
-        <div className="grid grid-cols-3 gap-4 p-4">
-            {images.map((img, index) => (
-                <Image
-                    key={index}
-                    src={`/spaces/${id}/${img}`}
-                    alt={`${index + 1}`}
-                    width={300}
-                    height={200}
-                />
-            ))}
-        </div>
-    )
+
+
+    // return (
+    //     <div className="grid grid-cols-3 gap-4 p-4">
+    //         {images.map((img, index) => (
+    //             <Image
+    //                 key={index}
+    //                 src={`/spaces/${id}/${img}`}
+    //                 alt={`${index + 1}`}
+    //                 width={300}
+    //                 height={200}
+    //             />
+    //         ))}
+    //     </div>
+    // )
 }
