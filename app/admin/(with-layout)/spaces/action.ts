@@ -1,13 +1,11 @@
 'use server'
 
-import { redirect } from 'next/navigation';
 import { addSpaceRepo } from '@/repositories/spaces';
 import { addSpaceImageRepo } from '@/repositories/space-images';
 import { spacesImageDir } from '@/lib/constant';
 import path from 'path';
 import fs from 'fs/promises';
 import { SpaceSchema } from '@/models/Space';
-import { date } from 'zod';
 
 
 export async function addSpace(prevState: any, formData: FormData) {
@@ -59,22 +57,4 @@ export async function addSpace(prevState: any, formData: FormData) {
             success: true
         }
     }
-
-    // redirect('/admin/spaces/add');
 }
-
-
-// export async function deleteSpace(spaceId: String) {
-//     const id = formData.get('id');
-//     if (typeof id !== 'string' || id.trim() === '') {
-//         return {
-//             message: 'Invalid space ID.',
-//         }
-//     }
-//     // Implement the delete functionality here, e.g., call a repository function to delete the space from the database. 
-//     console.log("Delete space with ID:", id);
-//     return {
-//         message: `Space with ID ${id} deleted successfully.`,
-//         success: true
-//     }
-// }

@@ -15,9 +15,11 @@ export async function middleware(request: NextRequest) {
     const cookie = (await cookies()).get("AdminSession")?.value;
     const session = await decrypt(cookie);
 
+    console.log('Middleware session:', session?.expiresAt);
+
     // check if the user is logged, if not redirect to login
     // checking all the route under protectedRoutes
-    if (matchingRoutesInList(path, protectedRoutes) && !session?.userId) {
+    if (matchingRoutesInList(path, protectedRoutes) && !session?.userId || (typeof session?.expiresAt === 'string' && new Date(session.expiresAt) < new Date())) {
         return NextResponse.redirect(new URL("/admin/login", request.nextUrl));
     }
 
