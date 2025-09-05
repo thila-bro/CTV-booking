@@ -42,10 +42,14 @@ export default function AddSpaceForm() {
                         type="text"
                         id="name"
                         name="name"
-
+                        required
                         className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring focus:border-blue-400"
                         placeholder="Enter product name"
+                        defaultValue={typeof state?.data?.name === 'string' ? state.data.name : ''}
                     />
+                    {state?.errors?.name && (
+                        <p className="text-red-500">{state.errors.name}</p>
+                    )}
                 </div>
 
 
@@ -59,10 +63,14 @@ export default function AddSpaceForm() {
                         name="price"
                         min="0"
                         step="1"
-
+                        required
                         className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring focus:border-blue-400"
                         placeholder="Enter price"
+                        defaultValue={typeof state?.data?.price === 'string' ? state.data.price : ''}
                     />
+                    {state?.errors?.price && (
+                        <p className="text-red-500">{state.errors.price}</p>
+                    )}
                 </div>
             </div>
 
@@ -77,7 +85,7 @@ export default function AddSpaceForm() {
                     name="images"
                     accept="image/*"
                     multiple
-
+                    required
                     className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
              file:rounded-md file:border-0
              file:text-sm file:font-semibold
@@ -85,6 +93,9 @@ export default function AddSpaceForm() {
              hover:file:bg-blue-100"
                 />
                 <p className="text-xs text-gray-500 mt-1">You can upload multiple images (PNG, JPG, etc.)</p>
+                {state?.errors?.images && (
+                    <p className="text-red-500">{state.errors.images}</p>
+                )}
             </div>
 
             {state?.message && !state?.success && (

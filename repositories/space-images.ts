@@ -11,3 +11,11 @@ export async function addSpaceImageRepo(space_id: string, image_path: string) {
     `;
     return result[0];
 }
+
+export async function getSpaceImagesRepo(space_id: string) {
+    const result = await sql`
+        SELECT * FROM space_images
+        WHERE space_id = ${space_id}
+    `;
+    return result;
+}

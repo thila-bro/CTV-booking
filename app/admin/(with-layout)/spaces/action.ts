@@ -6,9 +6,21 @@ import { addSpaceImageRepo } from '@/repositories/space-images';
 import { spacesImageDir } from '@/lib/constant';
 import path from 'path';
 import fs from 'fs/promises';
+import { SpaceSchema } from '@/models/Space';
+import { date } from 'zod';
 
 
 export async function addSpace(prevState: any, formData: FormData) {
+    const validationResult = SpaceSchema.safeParse({
+        name: formData.get('name'),
+        price: formData.get('price'),
+        images: formData.getAll('images'),
+    });
+
+    if (!validationResult.success) {
+        return { errors: validationResult.error.flatten().fieldErrors, data: Object.fromEntries(formData) };
+    }
+    
     const name = formData.get('name');
     const price = formData.get('price');
     const images = formData.getAll('images') as File[];
@@ -21,7 +33,7 @@ export async function addSpace(prevState: any, formData: FormData) {
 
     if (!images.length || images.every(img => img.size === 0)) {
         return {
-            message: 'Please upload at least one image. Motherfucker!',
+            message: 'Please upload at least one image.',
         }
     }
 

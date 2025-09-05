@@ -13,17 +13,21 @@ import {
 import { useState, useEffect } from 'react';
 
 export default function SpaceTable() {
-    const [spaces, setSpaces] = useState([]);
+    const [spaces, setSpaces] = useState<{ id: string; name: string; price: number; }[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
 
-    const [editingRowId, setEditingRowId] = useState(null);
+    const [editingRowId, setEditingRowId] = useState<string | null>(null);
     const [editedValues, setEditedValues] = useState({}); // To hold temporary edited data
 
     useEffect(() => {
         setIsLoading(true);
         getAllSpacesRepo().then((data) => {
-            setSpaces(data);
+            setSpaces(data.map((space: any) => ({
+                id: space.id,
+                name: space.name,
+                price: space.price,
+            })));
             setIsLoading(false);
         }
         );
@@ -56,9 +60,15 @@ export default function SpaceTable() {
         setEditingRowId(null);
     }
 
-    const handleSaveEdit = async (id: string) => {        
-        const name = document.getElementById("name").value;
-        const price = document.getElementById("price").value;
+    const handleSaveEdit = async (id: string) => {
+
+        // const name = document.getElementById("name").value;
+        // const price = document.getElementById("price").value;
+
+        const nameElement = document.getElementById("name");
+        const name = nameElement ? (nameElement as HTMLInputElement).value : '';
+        const priceElement = document.getElementById("price");
+        const price = priceElement ? (priceElement as HTMLInputElement).value : '';
 
         setIsLoading(true);
         const response = await updateSpaceRepo({ id, name, price })
@@ -68,7 +78,7 @@ export default function SpaceTable() {
 
             const updatedSpaces = spaces.map((space) => {
                 if (space.id === id) {
-                    return { ...space, name, price };
+                    return { ...space, name, price: Number(price) };
                 }
                 return space;
             });
@@ -132,7 +142,10 @@ export default function SpaceTable() {
                                 )}
                             </td>
                             <td className="px-4 py-2 border-b">
-                                <Link href={`spaces/images/${space.id}`}>All Images</Link>
+                                <Link href={{
+                                    pathname: `spaces/images/${space.id}`,
+                                    query: { spaceId: space.id }
+                                }}>All Images</Link>
                             </td>
                             <td className="px-4 py-2 border-b">
                                 <div className='flex'>
