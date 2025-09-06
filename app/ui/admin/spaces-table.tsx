@@ -61,10 +61,6 @@ export default function SpaceTable() {
     }
 
     const handleSaveEdit = async (id: string) => {
-
-        // const name = document.getElementById("name").value;
-        // const price = document.getElementById("price").value;
-
         const nameElement = document.getElementById("name");
         const name = nameElement ? (nameElement as HTMLInputElement).value : '';
         const priceElement = document.getElementById("price");

@@ -1,9 +1,11 @@
 'use client'
 
-import { Button } from '@/app/ui/button';
 import Form from 'next/form';
 import { useActionState } from 'react';
 import { AdminLogin } from './action';
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input";
 
 
 const initialState = {
@@ -25,22 +27,22 @@ export default function AdminLoginForm() {
             <label className="block text-sm font-medium text-gray-700">
               Email
             </label>
-            <input
+            <Input
               name="email"
               type="email"
               placeholder="you@example.com"
-              className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+              className="mt-1 w-full rounded-md p-2 "
 
             />
             {state?.errors?.email && (
-              <p className="text-red-500">{state.errors.email}</p>
+              <Label htmlFor="email" className="text-red-500">{state.errors.email}</Label>
             )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Password
             </label>
-            <input
+            <Input
               name="password"
               type="password"
               placeholder="••••••••"
@@ -49,10 +51,10 @@ export default function AdminLoginForm() {
             />
           </div>
           {state?.errors?.password && (
-            <p className="text-red-500">{state.errors.password}</p>
+            <Label htmlFor="password" className="text-red-500">{state.errors.password}</Label>
           )}
-          {state?.message && <p className="text-red-500">{state.message}</p>}
-          <Button className="w-full rounded-md bg-gray-600 py-2 px-4 text-white hover:bg-gray-700 focus:outline-none" disabled={pending}>
+          {state?.message && <Label className="text-red-500">{state.message}</Label>}
+          <Button className="w-full rounded-md py-2 px-4 " disabled={pending}>
             Log in
           </Button>
         </Form>

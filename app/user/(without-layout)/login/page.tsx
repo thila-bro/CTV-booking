@@ -4,10 +4,12 @@ import {
   CheckCircleIcon,
   ExclamationCircleIcon,
 } from '@heroicons/react/24/outline';
-import { Button } from '@/app/ui/button';
 import Form from 'next/form';
 import { loginUser } from '../action';
 import { useActionState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input";
 
 
 const initialState = {
@@ -31,41 +33,40 @@ export default function LoginForm() {
             <label className="block text-sm font-medium text-gray-700">
               Email
             </label>
-            <input
+            <Input
               name="email"
               type="email"
               placeholder="you@example.com"
-              className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+              className="mt-1 w-full p-2"
               defaultValue={state?.data?.email?.toString()}
 
             />
             {state?.errors?.email && (
-              <p className="text-red-500">{state.errors.email}</p>
+              <Label htmlFor="email" className="text-red-500">{state.errors.email}</Label>
             )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Password
             </label>
-            <input
+            <Input
               name="password"
               type="password"
               placeholder="••••••••"
-              className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+              className="mt-1 w-full p-2"
 
             />
             {state?.errors?.password && (
-              <p className="text-red-500">{state.errors.password}</p>
+              <Label htmlFor="password" className="text-red-500">{state.errors.password}</Label>
             )}
           </div>
 
           {state?.message && !state?.success && (
             <div className="flex mt-2 items-center text-red-600 ">
-              {/* <ExclamationCircleIcon className="h-5 w-5 mr-2" /> */}
-              <p aria-live="polite">{state.message}</p>
+              <Label className="text-red-500">{state.message}</Label>
             </div>
           )}
-          <Button className="w-full rounded-md bg-gray-600 py-2 px-4 text-white hover:bg-gray-700 focus:outline-none" disabled={pending}>
+          <Button className="w-full rounded-md py-2 px-4 " disabled={pending}>
             Log in
           </Button>
         </Form>

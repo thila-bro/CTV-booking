@@ -1,12 +1,16 @@
 'use client';
 
+import { Button } from "@/components/ui/button";
 import { getAllSpacesRepo } from '@/repositories/spaces';
 import { useState, useEffect } from 'react';
+import { userSessionCookieName } from '@/lib/constant';
+import Link from 'next/link';
 
 
 export default function PublishedSpacesList() {
     const [spaces, setSpaces] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
     useEffect(() => {
         setIsLoading(true);
@@ -14,11 +18,16 @@ export default function PublishedSpacesList() {
             setSpaces(data);
             setIsLoading(false);
         });
+        // Check user login status (this is a placeholder, replace with actual logic)
+        const userLoggedIn = document.cookie.includes(userSessionCookieName);
+        setIsUserLoggedIn(userLoggedIn);
     }, []);
+
+    
 
     if (isLoading) {
         return <div>Loading...</div>;
-    }    
+    }
 
     return (
         <>
@@ -39,9 +48,16 @@ export default function PublishedSpacesList() {
                             <div className="p-6 flex flex-col flex-grow">
                                 <h3 className="text-lg font-semibold mb-2">{space.name}</h3>
                                 <p className="text-sm text-gray-600 mb-4">${space.price}/Hr</p>
-                                <button className="mt-auto px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
-                                    Book Now
-                                </button>
+                                {isUserLoggedIn ? (
+                                    <Link href={{
+                                        pathname: '/user/checkout',
+                                        query: { spaceId: space.id }
+                                    }}>
+                                        <Button className="mt-auto w-full">
+                                            Book Now
+                                        </Button>
+                                    </Link>
+                                ): (<p className="text-sm text-gray-600 mb-4">Please log in to book</p>)}
                             </div>
                         </div>
                     ))}

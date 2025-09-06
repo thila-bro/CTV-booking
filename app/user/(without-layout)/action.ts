@@ -6,6 +6,7 @@ import { redirect, RedirectType } from 'next/navigation';
 import { UserSchema } from '@/models/User';
 import { UserLoginSchema } from '@/models/UserLogin';
 import { createSession, deleteSession } from '@/lib/session';
+import { userSessionCookieName } from '@/lib/constant';
 
 export async function addUser(prevState: any, formData: FormData) {
     const firstName = formData.get('firstName');

@@ -7,4 +7,6 @@ export const SpaceSchema = z.object({
         (val) => Array.isArray(val) ? val : [val],
         z.array(z.instanceof(File)).min(1, { message: "At least one image is required" })
     ),
+    start_time: z.preprocess((val) => String(val), z.string().min(1, { message: "Start time is required" })),
+    end_time: z.preprocess((val) => String(val), z.string().min(1, { message: "End time is required" })),
 });

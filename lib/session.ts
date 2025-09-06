@@ -1,6 +1,7 @@
 import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { adminSessionCookieName, userSessionCookieName } from "./constant";
 
 const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey);
@@ -12,7 +13,7 @@ export async function createSession(userId: string, type: 'user' | 'admin' ) {
 
     switch (type) {
         case 'user':
-            (await cookies()).set("UserSession", session, {
+            (await cookies()).set(userSessionCookieName, session, {
                 // httpOnly: true,
                 secure: false,
                 expires: expiresAt,
@@ -21,7 +22,7 @@ export async function createSession(userId: string, type: 'user' | 'admin' ) {
             });
             break;
         case 'admin':
-            (await cookies()).set("AdminSession", session, {
+            (await cookies()).set(adminSessionCookieName, session, {
                 // httpOnly: true,
                 secure: false,
                 expires: expiresAt,
@@ -44,9 +45,9 @@ export async function deleteSession(type?: 'user' | 'admin') {
     try {
         switch (type) {
             case 'user':
-                (await cookies()).delete("UserSession");
+                (await cookies()).delete(userSessionCookieName);
             case 'admin':
-                (await cookies()).delete("AdminSession");
+                (await cookies()).delete(adminSessionCookieName);
             // default:
             //     (await cookies()).delete("UserSession");
             //     (await cookies()).delete("AdminSession");

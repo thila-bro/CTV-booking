@@ -13,6 +13,8 @@ export async function addSpace(prevState: any, formData: FormData) {
         name: formData.get('name'),
         price: formData.get('price'),
         images: formData.getAll('images'),
+        start_time: formData.get('start_time'),
+        end_time: formData.get('end_time'),
     });
 
     if (!validationResult.success) {
@@ -21,21 +23,11 @@ export async function addSpace(prevState: any, formData: FormData) {
 
     const name = formData.get('name');
     const price = formData.get('price');
+    const start_time = formData.get('start_time');
+    const end_time = formData.get('end_time');
     const images = formData.getAll('images') as File[];
 
-    if (typeof name !== 'string' || typeof price !== 'string' || name.trim() === '' || price.trim() === '') {
-        return {
-            message: 'Invalid input. Name and price are required.',
-        }
-    }
-
-    if (!images.length || images.every(img => img.size === 0)) {
-        return {
-            message: 'Please upload at least one image.',
-        }
-    }
-
-    const response = await addSpaceRepo({ name, price });
+    const response = await addSpaceRepo({ name, price, start_time, end_time });
 
     if (response?.db?.id) {
         const uploadDir = path.join(process.cwd(), 'public', `${spacesImageDir}`, response.db.id);
