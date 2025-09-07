@@ -16,12 +16,12 @@ import React, { useState as reactUseState } from 'react';
 // Depending on the size of the application, this would be stored in a database.
 const links = [
   { name: 'Home', href: '/admin', icon: HomeIcon },
-  {
-    name: 'Invoices',
-    href: '/admin/invoices',
-    icon: DocumentDuplicateIcon,
-  },
-  { name: 'Customers', href: '/admin/customers', icon: UserGroupIcon },
+  // {
+  //   name: 'Invoices',
+  //   href: '/admin/invoices',
+  //   icon: DocumentDuplicateIcon,
+  // },
+  // { name: 'Customers', href: '/admin/customers', icon: UserGroupIcon },
   {
     name: 'Spaces',
     href: '/admin/spaces',
