@@ -158,6 +158,43 @@ async function seedSpaceImages() {
   `;
 }
 
+async function seedTempBookings() {
+  await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`; // Ensure the extension is created
+
+  await sql`CREATE TABLE IF NOT EXISTS temp_bookings (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID REFERENCES users(id),
+    space_id UUID REFERENCES spaces(id),
+    date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    duration INT NOT NULL,
+    total_price INT NOT NULL,
+    payment_status VARCHAR(50) DEFAULT 'pending' NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );`;
+}
+
+async function seedBookings() {
+  await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`; // Ensure the extension is created
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS bookings (
+      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      user_id UUID REFERENCES users(id),
+      space_id UUID REFERENCES spaces(id),
+      date DATE NOT NULL,
+      start_time TIME NOT NULL,
+      end_time TIME NOT NULL,
+      duration INT NOT NULL,
+      total_price INT NOT NULL,      
+      status VARCHAR(50) DEFAULT 'confirmed' NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `;
+}
+
+
 export async function GET() {
   try {
     const result = await sql.begin(async (sql) => [
@@ -165,6 +202,8 @@ export async function GET() {
       seedSpaceImages(),
       seedUsers(),
       seedAdmins(),
+      seedTempBookings(),
+      seedBookings(),
       // seedCustomers(),
       // seedInvoices(),
       // seedRevenue(),

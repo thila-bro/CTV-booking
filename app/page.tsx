@@ -14,7 +14,7 @@ export default function Home() {
         </p>
         <div className="flex space-x-4">
           <Link href='/user/login' className="px-6 py-3 bg-white text-black font-semibold rounded-xl shadow hover:bg-gray-100">
-            Book Now
+            Log In
           </Link>
         </div>
       </section>

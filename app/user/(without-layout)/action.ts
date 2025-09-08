@@ -19,10 +19,9 @@ export async function addUser(prevState: any, formData: FormData) {
     const validationResult = UserSchema.safeParse({ firstName, lastName, email, mobile, password, confirmPassword });
 
     if (!validationResult.success) {
-        console.error('Validation errors:', validationResult.error.flatten().fieldErrors);
-        return { 
-            errors: validationResult.error.flatten().fieldErrors, 
-            data: Object.fromEntries(formData) 
+        return {
+            errors: validationResult.error.flatten().fieldErrors,
+            data: Object.fromEntries(formData)
         };
     }
 
@@ -44,8 +43,7 @@ export async function loginUser(prevState: any, formData: FormData) {
     const validationResult = UserLoginSchema.safeParse({ email, password });
 
     if (!validationResult.success) {
-        console.error('Validation errors:', validationResult.error.flatten().fieldErrors);
-        return {    
+        return {
             errors: validationResult.error.flatten().fieldErrors,
             data: Object.fromEntries(formData)
         };
@@ -59,8 +57,8 @@ export async function loginUser(prevState: any, formData: FormData) {
         }
     }
 
-    const isPasswordValid = password && typeof password === 'string' 
-        ? await bcrypt.compare(password, user.password) 
+    const isPasswordValid = password && typeof password === 'string'
+        ? await bcrypt.compare(password, user.password)
         : false;
 
     if (!isPasswordValid) {
@@ -73,7 +71,7 @@ export async function loginUser(prevState: any, formData: FormData) {
     }
 
     await createSession(user.id, 'user');
-    redirect('/user', RedirectType.replace);
+    redirect('/', RedirectType.replace);
 }
 
 export async function logoutUser() {

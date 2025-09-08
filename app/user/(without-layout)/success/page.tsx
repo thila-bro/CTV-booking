@@ -3,6 +3,12 @@ import { useRouter } from "next/navigation";
 
 export default function SuccessPage() {
     const router = useRouter();
+    const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+    const spaceName = searchParams?.get("spaceName") || "Modern Coworking Hub";
+    const date = searchParams?.get("date") || "Not selected";
+    const startTime = searchParams?.get("startTime") || "--";
+    const endTime = searchParams?.get("endTime") || "--";
+    const totalPrice = searchParams?.get("totalPrice") || "--";
 
     return (
         <main className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
@@ -34,16 +40,16 @@ export default function SuccessPage() {
                 <div className="bg-gray-100 p-4 rounded-lg text-left mb-6">
                     <h3 className="font-semibold mb-2">Booking Details</h3>
                     <p>
-                        <span className="font-medium">Space:</span> Modern Coworking Hub
+                        <span className="font-medium">Space:</span> {spaceName}
                     </p>
                     <p>
-                        <span className="font-medium">Location:</span> Downtown
+                        <span className="font-medium">Date:</span> {date}
                     </p>
                     <p>
-                        <span className="font-medium">Date:</span> Sept 5, 2025
+                        <span className="font-medium">Time:</span> {startTime} - {endTime}
                     </p>
                     <p>
-                        <span className="font-medium">Time:</span> 10:00 AM - 2:00 PM
+                        <span className="font-medium">Total:</span> A${parseFloat(totalPrice).toFixed(2)}
                     </p>
                 </div>
 
@@ -56,7 +62,7 @@ export default function SuccessPage() {
                         Back to Home
                     </button>
                     <button
-                        onClick={() => router.push("/bookings")}
+                        onClick={() => router.push("/user/bookings")}
                         className="flex-1 py-3 border border-gray-300 rounded-lg hover:bg-gray-100 transition"
                     >
                         View My Bookings

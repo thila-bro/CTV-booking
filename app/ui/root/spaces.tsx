@@ -31,14 +31,14 @@ export default function PublishedSpacesList() {
     const gridCols =
         spaces.length >= 4
             ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
-            : `grid-cols-1 sm:grid-cols-2 lg:grid-cols-${spaces.length}`;
+            : `grid-cols-1 sm:grid-cols-4 lg:grid-cols-${spaces.length}`;
 
     return (
         <>
             <section className="py-20 bg-gray-100 px-6">
                 <h2 className="text-3xl font-bold text-center mb-12">Featured Spaces</h2>
                 <div className="flex justify-center">
-                    <div className={`grid ${gridCols} gap-8 max-w-2xl w-full mx-auto`}>
+                    <div className={`grid ${gridCols} gap-8 max-w-7xl w-full mx-auto`}>
                         {spaces.map((space, idx) => (
                             <div
                                 key={idx}

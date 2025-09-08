@@ -10,6 +10,7 @@ import { useActionState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input";
+import Link from 'next/link';
 
 
 const initialState = {
@@ -69,6 +70,13 @@ export default function LoginForm() {
           <Button className="w-full rounded-md py-2 px-4 " disabled={pending}>
             Log in
           </Button>
+          {/* register */}
+          <p className="mt-4 text-center text-sm text-gray-600">
+            Don't have an account?{' '}
+            <Link href="/user/register" className="font-semibold">
+              Register
+            </Link>
+          </p>
         </Form>
       </div>
     </div>
