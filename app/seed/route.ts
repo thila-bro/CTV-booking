@@ -187,13 +187,14 @@ async function seedBookings() {
       start_time TIME NOT NULL,
       end_time TIME NOT NULL,
       duration INT NOT NULL,
-      total_price INT NOT NULL,      
+      total_price INT NOT NULL,
+      payment_reference VARCHAR(255) NOT NULL,
+      payment_response JSONB NOT NULL,
       status VARCHAR(50) DEFAULT 'confirmed' NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `;
 }
-
 
 export async function GET() {
   try {

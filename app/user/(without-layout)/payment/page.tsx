@@ -1,35 +1,56 @@
 
 "use client";
-import React from "react";
-import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
     PayPalScriptProvider,
     PayPalButtons,
-    usePayPalScriptReducer
 } from "@paypal/react-paypal-js";
+
+import { getTempBookingByIdRepo } from "@/repositories/temp-booking";
+import { Row } from "postgres";
+import { paymentSuccessAction } from "./action";
 
 
 export default function PaymentSummaryPage() {
     const searchParams = useSearchParams();
+
+    // loading state
+    const preBookingId = searchParams.get("preBookingId");
+    const [isLoading, setIsLoading] = useState(true);
+    const [tempBooking, setTempBooking] = useState<Row | null>(null);
+    const [space, setSpace] = useState<Row | null>(null);
+    const [user, setUser] = useState<Row | null>(null);
+
+    useEffect(() => {
+        setIsLoading(true);
+        getTempBookingByIdRepo(preBookingId as string).then((data) => {
+            setTempBooking(data);
+            setSpace(data.space);
+            setUser(data.user);
+            setIsLoading(false);
+        });
+    }, []);
+
     const router = useRouter();
-    const spaceName = searchParams.get("spaceName") || "Space";
-    const date = searchParams.get("date") || "Not selected";
-    const startTime = searchParams.get("startTime") || "--";
-    const endTime = searchParams.get("endTime") || "--";
-    const totalPrice = searchParams.get("totalPrice") || "0";
+    const spaceName = space?.name;
+    const date = tempBooking ? new Date(tempBooking.date).toLocaleDateString() : "--";
+    const startTime = tempBooking ? tempBooking.start_time.slice(0, 5) : "--";
+    const endTime = tempBooking ? tempBooking.end_time.slice(0, 5) : "--";
+    const totalPrice = tempBooking ? parseFloat(tempBooking.total_price).toFixed(2) : "0.00";
 
     // Helper to build query string for booking details
-    const buildSuccessUrl = () => {
-        const params = new URLSearchParams({
-            spaceName,
-            date,
-            startTime,
-            endTime,
-            totalPrice,
+    const buildSuccessUrl = (actions: any) => {        
+        setIsLoading(true);
+        paymentSuccessAction(preBookingId as string, actions).then(() => {
+            setIsLoading(false);
+            router.push(`/user/success?preBookingId=${preBookingId}`);
         });
-        return `/user/success?${params.toString()}`;
     };
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
@@ -59,6 +80,7 @@ export default function PaymentSummaryPage() {
 
             <PayPalScriptProvider options={{
                 clientId: "AQpxi8gzTkeEY7jxKS2f3L_FUPEYkSnNSoylO3GhMhHmcENQBcCzOJ2aGzWLgDSjv2pzo2p8EjWpPRKQ", // Replace with your real PayPal client ID
+                // clientId: process.env.PAYPAL_CLIENT_ID as string,
                 currency: "AUD",
                 intent: "capture",
                 components: "buttons,funding-eligibility"
@@ -81,8 +103,11 @@ export default function PaymentSummaryPage() {
                     }}
                     onApprove={async (data, actions) => {
                         if (!actions?.order) return;
-                        await actions.order.capture();
-                        router.push(buildSuccessUrl());
+                        await actions.order.capture()
+                        const orderDetails = await actions.order.capture();
+                        buildSuccessUrl(orderDetails);
+                        
+                        // router.push(buildSuccessUrl(actions));
                     }}
                     onError={(err) => {
                         alert("Payment could not be completed. Please try again.");

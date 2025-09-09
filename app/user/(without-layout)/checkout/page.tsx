@@ -1,39 +1,40 @@
 "use client";
+
+import Autoplay from "embla-carousel-autoplay";
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card"
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { findSpaceByIdRepo } from "@/repositories/spaces";
+import { redirect } from 'next/navigation';
+import { dateFormat, formatTime } from "@/lib/global";
+import { useActionState } from 'react';
+import { checkSpaceAvailability } from "./action";
+import { FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { Calendar } from "@/components/ui/calendar";
 import {
     Carousel,
     CarouselContent,
     CarouselItem
 } from "@/components/ui/carousel"
-import { Calendar } from "@/components/ui/calendar"
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { findSpaceByIdRepo } from "@/repositories/spaces";
-import Autoplay from "embla-carousel-autoplay";
-import { redirect } from 'next/navigation';
-import { formatTimeHM } from "@/lib/global";
-import Form from "next/form";
-import { useActionState } from 'react';
-import { checkSpaceAvailability } from "./action";
 
 const initialState = {
     success: false,
-    message: '',
-    email: '',
-    data: []
+    message: ''
 }
 
 export default function CheckoutPage() {
     const [state, formAction, pending] = useActionState(checkSpaceAvailability, initialState)
+    const successRouter = useRouter();
     const searchParams = useSearchParams();
     const spaceId = searchParams.get("spaceId") || "";
 
@@ -51,9 +52,7 @@ export default function CheckoutPage() {
     };
     const [space, setSpace] = useState<SpaceType | null>(null);
     const [open, setOpen] = useState(false)
-    const [date, setDate] = useState<Date | undefined>(
-        new Date()
-    )
+    const [date, setDate] = useState<Date | null>(new Date());
 
     const plugin = useRef(
         Autoplay({ delay: 5000, stopOnInteraction: true })
@@ -92,41 +91,24 @@ export default function CheckoutPage() {
     }, [startTime, endTime, pricePerHour]);
 
     // Prevent booking if duration < 30 mins
-    const handleCheckout = () => {
-        const [startH, startM] = startTime.split(":").map(Number);
-        const [endH, endM] = endTime.split(":").map(Number);
-        const start = startH * 60 + startM;
-        const end = endH * 60 + endM;
-        // Validate minimum duration
-        if (end - start < 30) {
-            alert("Minimum booking is 30 minutes.");
-            return;
-        }
-        // Validate available time range
-        if (space) {
-            const [availStartH, availStartM] = space.start_time.split(":").map(Number);
-            const [availEndH, availEndM] = space.end_time.split(":").map(Number);
-            const availStart = availStartH * 60 + availStartM;
-            const availEnd = availEndH * 60 + availEndM;
-            if (start < availStart || end > availEnd) {
-                alert(`Selected time is out of available range (${space.start_time} - ${space.end_time}).`);
-                return;
-            }
-        }
-        // Build query string with booking details
-        const params = new URLSearchParams({
-            spaceId: space?.id || "",
-            spaceName: space?.name || "",
-            date: date ? date.toISOString().split('T')[0] : "",
-            startTime,
-            endTime,
-            totalPrice: totalPrice.toString(),
-        });
-        redirect(`/user/payment?${params.toString()}`);
+    const handleCheckout = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        formData.set('date', date ? dateFormat(date as Date) : "");
+        formData.set('spaceId', spaceId);
+        formData.set('totalPrice', totalPrice.toString());
+
+        formAction(formData);
     };
 
     const [mounted, setMounted] = useState(false);
     useEffect(() => setMounted(true), []);
+    
+    useEffect(() => {
+        if (state.success) {
+            redirect(`/user/payment/?preBookingId=${state.db?.db.id}`);
+        }
+    }, [state.success, successRouter]);
 
     return (
         <main className="min-h-screen bg-gray-50 py-12 px-6 flex justify-center">
@@ -136,7 +118,7 @@ export default function CheckoutPage() {
                 </h1>
 
                 {/* Split into two columns before summary */}
-                <Form action={formAction} className="mb-6">
+                <form className="mb-6" onSubmit={handleCheckout}>
                     <div className="flex flex-col md:flex-row gap-8 mb-8">
                         {/* Left: Booking Form */}
                         <div className="flex-1">
@@ -152,7 +134,7 @@ export default function CheckoutPage() {
                                 {space && (
                                     <div className="mb-2">
                                         <span className="font-medium text-gray-700">Available Time:</span>
-                                        <span className="ml-2 text-gray-900">{formatTimeHM(space.start_time)} - {formatTimeHM(space.end_time)}</span>
+                                        <span className="ml-2 text-gray-900">{formatTime(space.start_time)} - {formatTime(space.end_time)}</span>
                                     </div>
                                 )}
                                 <div>
@@ -174,11 +156,11 @@ export default function CheckoutPage() {
                                             <PopoverContent className="w-auto overflow-hidden p-0" align="start">
                                                 <Calendar
                                                     mode="single"
-                                                    selected={date}
+                                                    selected={date || undefined}
                                                     // onSelect={setDate}
                                                     captionLayout="dropdown"
                                                     onSelect={(date) => {
-                                                        setDate(date)
+                                                        setDate(date ?? null)
                                                         setOpen(false)
                                                     }}
                                                     disabled={(date) =>
@@ -217,6 +199,11 @@ export default function CheckoutPage() {
                                     </div>
                                 </div>
                             </div>
+                            {state?.message && !state?.success && (
+                                <div className="flex mt-2 items-center text-red-600 ">
+                                    <p aria-live="polite">{state.message}</p>
+                                </div>
+                            )}
                         </div>
 
                         {/* Right: Image Carousel */}
@@ -266,14 +253,13 @@ export default function CheckoutPage() {
 
                     {/* Checkout Button */}
                     <Button
-                        // onClick={handleCheckout}
-                        // type="submit"
-                        disabled={totalPrice === 0 || pending}
+                        type="submit"
+                        disabled={pending}
                         className="w-full py-3 font-semibold rounded-lg shadow transition"
                     >
                         Confirm & Proceed to Payment
                     </Button>
-                </Form>
+                </form>
             </div>
         </main >
     );

@@ -7,6 +7,7 @@ import { userSessionCookieName } from '@/lib/constant';
 import Link from 'next/link';
 
 
+
 export default function PublishedSpacesList() {
     const [spaces, setSpaces] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -55,7 +56,9 @@ export default function PublishedSpacesList() {
                                     {isUserLoggedIn ? (
                                         <Link href={{
                                             pathname: '/user/checkout',
-                                            query: { spaceId: space.id }
+                                            query: { 
+                                                spaceId: space.id, 
+                                             }
                                         }}>
                                             <Button className="mt-auto w-full">
                                                 Book Now

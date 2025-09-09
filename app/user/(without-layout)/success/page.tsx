@@ -1,14 +1,40 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getTempBookingByIdWithUserNSpaceRepo, deleteTempBookingByIdRepo } from "@/repositories/temp-booking";
+import { Row } from "postgres";
+import { formatTime } from "@/lib/global";
+
 
 export default function SuccessPage() {
     const router = useRouter();
-    const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
-    const spaceName = searchParams?.get("spaceName") || "Modern Coworking Hub";
-    const date = searchParams?.get("date") || "Not selected";
-    const startTime = searchParams?.get("startTime") || "--";
-    const endTime = searchParams?.get("endTime") || "--";
-    const totalPrice = searchParams?.get("totalPrice") || "--";
+
+    const searchParams = useSearchParams();
+    const preBookingId = searchParams.get("preBookingId");
+    const [isLoading, setIsLoading] = useState(true);
+    const [tempBooking, setTempBooking] = useState<Row | null>(null);
+
+    useEffect(() => {
+        if (preBookingId) {
+            setIsLoading(true);
+            getTempBookingByIdWithUserNSpaceRepo(preBookingId as string).then((data) => {
+                // If no data, redirect to home
+                if (!data) {
+                    router.push("/");
+                    return;
+                }
+                setTempBooking(data);
+
+                console.log("Fetched temp booking data:", data);
+                deleteTempBookingByIdRepo(preBookingId as string);
+                setIsLoading(false);
+            });
+        }
+    }, [preBookingId]);
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <main className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
@@ -40,16 +66,16 @@ export default function SuccessPage() {
                 <div className="bg-gray-100 p-4 rounded-lg text-left mb-6">
                     <h3 className="font-semibold mb-2">Booking Details</h3>
                     <p>
-                        <span className="font-medium">Space:</span> {spaceName}
+                        <span className="font-medium">Space:</span>{tempBooking?.space.name}
                     </p>
                     <p>
-                        <span className="font-medium">Date:</span> {date}
+                        <span className="font-medium">Date:</span>{tempBooking ? new Date(tempBooking.date).toLocaleDateString() : "--"}
                     </p>
                     <p>
-                        <span className="font-medium">Time:</span> {startTime} - {endTime}
+                        <span className="font-medium">Time:</span>{formatTime(tempBooking?.start_time)} - {formatTime(tempBooking?.end_time)}
                     </p>
                     <p>
-                        <span className="font-medium">Total:</span> A${parseFloat(totalPrice).toFixed(2)}
+                        <span className="font-medium">Total:</span> A${parseFloat(tempBooking?.total_price || "0").toFixed(2)}
                     </p>
                 </div>
 
