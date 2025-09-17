@@ -3,16 +3,15 @@ import { sql } from '@/lib/pgsqlConnector';
 
 export async function addSpaceRepo(Space: any) {
     const [insertSpace] = await sql`
-        INSERT INTO spaces (id, name, price, start_time, end_time)
-        VALUES (${crypto.randomUUID()}, ${Space.name}, ${parseInt(Space.price)}, ${Space.start_time}, ${Space.end_time})
-        ON CONFLICT (id) DO NOTHING
-        RETURNING id;
+        INSERT INTO spaces (name, start_time, end_time, price_per_hr, price_per_day, price_per_month, is_price_per_hr_enabled, is_price_per_day_enabled, is_price_per_month_enabled)
+        VALUES (${Space.name}, ${Space.start_time}, ${Space.end_time}, ${Space.price_per_hr}, ${Space.price_per_day}, ${Space.price_per_month}, ${Space.is_price_per_hr_enabled}, ${Space.is_price_per_day_enabled}, ${Space.is_price_per_month_enabled})
+        RETURNING *;
     `;
     return { message: 'Space added successfully', db: insertSpace };
 }
 
 export async function getAllSpacesRepo() {
-    const spaces = await sql`SELECT * FROM spaces ORDER BY id DESC`;
+    const spaces = await sql`SELECT * FROM spaces ORDER BY created_at DESC`;
     return spaces;
 }
 

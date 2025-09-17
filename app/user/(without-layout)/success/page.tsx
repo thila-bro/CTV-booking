@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getTempBookingByIdWithUserNSpaceRepo, deleteTempBookingByIdRepo } from "@/repositories/temp-booking";
 import { Row } from "postgres";
 import { formatTime } from "@/lib/global";
+import { format } from "date-fns";
 
 
 export default function SuccessPage() {
@@ -24,8 +25,6 @@ export default function SuccessPage() {
                     return;
                 }
                 setTempBooking(data);
-
-                console.log("Fetched temp booking data:", data);
                 deleteTempBookingByIdRepo(preBookingId as string);
                 setIsLoading(false);
             });
@@ -68,12 +67,42 @@ export default function SuccessPage() {
                     <p>
                         <span className="font-medium">Space:</span>{tempBooking?.space.name}
                     </p>
-                    <p>
-                        <span className="font-medium">Date:</span>{tempBooking ? new Date(tempBooking.date).toLocaleDateString() : "--"}
-                    </p>
-                    <p>
-                        <span className="font-medium">Time:</span>{formatTime(tempBooking?.start_time)} - {formatTime(tempBooking?.end_time)}
-                    </p>
+                    {tempBooking?.type === "hour" && (
+                        <>
+                            <p>
+                                <span className="font-medium">Date:</span> {tempBooking.date ? new Date(tempBooking.date).toLocaleDateString() : "--"}
+                            </p>
+                            <p>
+                                <span className="font-medium">Time:</span> {formatTime(tempBooking?.start_time)} - {formatTime(tempBooking?.end_time)}
+                            </p>
+                        </>
+                    )}
+                    {tempBooking?.type === "day" && (
+                        <>
+                            <p>
+                                <span className="font-medium">Start:</span> {format(tempBooking?.start_date, "dd MMMM, Y") ?? "--"}
+                            </p>
+                            <p>
+                                <span className="font-medium">End:</span> {format(tempBooking?.end_date, "dd MMMM, Y") ?? "--"}
+                            </p>
+                            <p>
+                                <span className="font-medium">Total Days:</span> {tempBooking?.duration ?? "--"}
+                            </p>
+                        </>
+                    )}
+                    {tempBooking?.type === "month" && (
+                        <>
+                            <p>
+                                <span className="font-medium">Start:</span> {format(tempBooking?.start_date, "MMMM, Y") ?? "--"}
+                            </p>
+                            <p>
+                                <span className="font-medium">End:</span> {format(tempBooking?.end_date, "MMMM, Y") ?? "--"}
+                            </p>
+                            <p>
+                                <span className="font-medium">Months:</span> {tempBooking?.duration ?? "--"}
+                            </p>
+                        </>
+                    )}
                     <p>
                         <span className="font-medium">Total:</span> A${parseFloat(tempBooking?.total_price || "0").toFixed(2)}
                     </p>

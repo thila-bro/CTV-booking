@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import postgres from 'postgres';
 import { invoices, customers, revenue, Admin } from '../lib/placeholder-data';
+import { se } from 'date-fns/locale';
 
 // const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: false }); // ssl should be true for live, false for local dev
@@ -136,9 +137,14 @@ async function seedSpaces() {
     CREATE TABLE IF NOT EXISTS spaces (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
-      price INT NOT NULL,
       start_time TIME NOT NULL,
       end_time TIME NOT NULL,
+      price_per_hr INT,
+      price_per_day INT,
+      price_per_month INT,
+      is_price_per_hr_enabled BOOLEAN DEFAULT FALSE,
+      is_price_per_day_enabled BOOLEAN DEFAULT FALSE,
+      is_price_per_month_enabled BOOLEAN DEFAULT FALSE,
       is_available BOOLEAN DEFAULT TRUE,      
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
@@ -165,46 +171,86 @@ async function seedTempBookings() {
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     user_id UUID REFERENCES users(id),
     space_id UUID REFERENCES spaces(id),
-    date DATE NOT NULL,
-    start_time TIME NOT NULL,
-    end_time TIME NOT NULL,
+    date DATE,
+    start_time TIME,
+    end_time TIME,
+    start_date DATE,
+    end_date DATE,
     duration INT NOT NULL,
     total_price INT NOT NULL,
+    type booking_type NOT NULL,
     payment_status VARCHAR(50) DEFAULT 'pending' NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );`;
 }
 
-async function seedBookings() {
+async function seedAvailability() {
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`; // Ensure the extension is created
 
   await sql`
-    CREATE TABLE IF NOT EXISTS bookings (
+    CREATE TABLE IF NOT EXISTS availability (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      user_id UUID REFERENCES users(id),
       space_id UUID REFERENCES spaces(id),
       date DATE NOT NULL,
       start_time TIME NOT NULL,
       end_time TIME NOT NULL,
-      duration INT NOT NULL,
-      total_price INT NOT NULL,
-      payment_reference VARCHAR(255) NOT NULL,
-      payment_response JSONB NOT NULL,
+      type booking_type NOT NULL,
       status VARCHAR(50) DEFAULT 'confirmed' NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `;
 }
 
+async function seedBookings() {
+  await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+
+  await sql`  CREATE TABLE IF NOT EXISTS bookings (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID REFERENCES users(id),
+    space_id UUID REFERENCES spaces(id),
+    date DATE,
+    start_time TIME,
+    end_time TIME,
+    start_date DATE,
+    end_date DATE,
+    duration INT NOT NULL,
+    total_price INT NOT NULL,
+    type booking_type NOT NULL,
+    payment_status VARCHAR(50) DEFAULT 'pending' NOT NULL,
+    payment_reference VARCHAR(255) NOT NULL,
+    payment_response JSONB NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );`;
+}
+
+async function seedCategories() {
+  await sql`
+    DO $$
+    BEGIN
+      IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'booking_type') THEN
+        CREATE TYPE booking_type AS ENUM ('hour', 'day', 'month');
+      END IF;
+    END
+    $$;
+  `;
+}
+
 export async function GET() {
   try {
     const result = await sql.begin(async (sql) => [
+      await seedCategories(),
+
+
       await seedSpaces(),
       seedSpaceImages(),
       seedUsers(),
       seedAdmins(),
       seedTempBookings(),
+      seedAvailability(),
       seedBookings(),
+
+
+      // seedBookings(),
       // seedCustomers(),
       // seedInvoices(),
       // seedRevenue(),

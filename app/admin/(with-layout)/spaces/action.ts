@@ -11,10 +11,12 @@ import { SpaceSchema } from '@/models/Space';
 export async function addSpace(prevState: any, formData: FormData) {
     const validationResult = SpaceSchema.safeParse({
         name: formData.get('name'),
-        price: formData.get('price'),
         images: formData.getAll('images'),
         start_time: formData.get('start_time'),
         end_time: formData.get('end_time'),
+        price_per_hr: formData.get('price_per_hr_enabled') === 'on' ? formData.get('price_per_hr') : null,
+        price_per_day: formData.get('price_per_day_enabled') === 'on' ? formData.get('price_per_day') : null,
+        price_per_month: formData.get('price_per_month_enabled') === 'on' ? formData.get('price_per_month') : null,
     });
 
     if (!validationResult.success) {
@@ -22,12 +24,17 @@ export async function addSpace(prevState: any, formData: FormData) {
     }
 
     const name = formData.get('name');
-    const price = formData.get('price');
     const start_time = formData.get('start_time');
     const end_time = formData.get('end_time');
+    const price_per_hr = formData.get('price_per_hr_enabled') === 'on' ? (formData.get('price_per_hr') || null) : null;
+    const price_per_day = formData.get('price_per_day_enabled') === 'on' ? (formData.get('price_per_day') || null) : null;
+    const price_per_month = formData.get('price_per_month_enabled') === 'on' ? (formData.get('price_per_month') || null) : null;
+    const is_price_per_hr_enabled = formData.get('price_per_hr_enabled') === 'on' ? true : false;
+    const is_price_per_day_enabled = formData.get('price_per_day_enabled') === 'on' ? true : false;
+    const is_price_per_month_enabled = formData.get('price_per_month_enabled') === 'on' ? true : false;
     const images = formData.getAll('images') as File[];
 
-    const response = await addSpaceRepo({ name, price, start_time, end_time });
+    const response = await addSpaceRepo({ name, price_per_hr, price_per_day, price_per_month, start_time, end_time, is_price_per_hr_enabled, is_price_per_day_enabled, is_price_per_month_enabled });
 
     if (response?.db?.id) {
         const uploadDir = path.join(process.cwd(), 'public', `${spacesImageDir}`, response.db.id);

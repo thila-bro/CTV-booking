@@ -26,7 +26,7 @@ export default function SpaceTable() {
             setSpaces(data.map((space: any) => ({
                 id: space.id,
                 name: space.name,
-                price: space.price,
+                price: space.price_per_hr, // Map price_per_hr to price
             })));
             setIsLoading(false);
         }
