@@ -1,6 +1,6 @@
 'use server';
 
-import { checkSpaceAvailabilityByDateAndTimeRepo } from "@/repositories/booking";
+import { checkSpaceAvailabilityByDateAndTimeRepo, checkSpaceAvailabilityByDateAndTimeRangeRepo } from "@/repositories/availability";
 import { findSpaceByIdRepo } from "@/repositories/spaces";
 import { cookies } from "next/headers";
 import { decrypt } from "@/lib/session";
@@ -17,8 +17,6 @@ export async function checkSpaceAvailability(prevState: any, formData: FormData)
     const endTime = formData.get("end_time") as string;
     const spaceId = formData.get("spaceId");
     const totalPrice = formData.get("totalPrice");
-
-    console.log("formData", bookingType);
 
     // Check if all required fields are present
     const UserCookie = (await cookies()).get(userSessionCookieName)?.value;
@@ -49,6 +47,7 @@ export async function checkSpaceAvailability(prevState: any, formData: FormData)
             });
 
             if (!validationResult.success) {
+                console.log("validationResult", validationResult.error.flatten());
                 return {
                     errors: validationResult.error.flatten().fieldErrors,
                     data: Object.fromEntries(formData)
@@ -84,6 +83,15 @@ export async function checkSpaceAvailability(prevState: any, formData: FormData)
                 }
             }
 
+            // Check if space is available for the selected date and time
+            const availabilities = await checkSpaceAvailabilityByDateAndTimeRepo(spaceId as string, date, startTime, endTime);
+            if (availabilities.length > 0) {
+                return {
+                    message: "Space is not available for the selected date and time.",
+                    success: false
+                };
+            }
+            
             const tempBooking = await addTempHrBookingRepo({
                 user_id: UserSession.userId,
                 space_id: spaceId,
@@ -121,9 +129,13 @@ export async function checkSpaceAvailability(prevState: any, formData: FormData)
             }
 
             // check if space is available for the selected date range
-
-
-            // console.log("dayValidationResult", bookingType);
+            const dayAvailabilities = await checkSpaceAvailabilityByDateAndTimeRangeRepo(spaceId as string, formData.get("start_date") as string, formData.get("end_date") as string);
+            if (dayAvailabilities.length > 0) {
+                return {
+                    message: "Space is not available for the selected date and time.",
+                    success: false
+                };
+            }
 
             const tempDayBooking = await addTempDayBookingRepo({
                 user_id: UserSession.userId,

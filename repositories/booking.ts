@@ -28,7 +28,12 @@ export async function addMonthBooking(booking: any) {
     return { message: 'Booking saved successfully', db: insertBooking };
 }
 
-export async function checkSpaceAvailabilityByDateAndTimeRepo(spaceId: string, date: string, startTime: string, endTime: string) {
-    const bookings = await sql`SELECT * FROM bookings WHERE (space_id = ${spaceId} AND date = CAST(${date} AS DATE)) AND ((start_time, end_time) OVERLAPS (CAST(${startTime} AS TIME), CAST(${endTime} AS TIME))) ORDER BY start_time ASC`;
+export async function getUserBookings(userId: string) {
+    const bookings = await sql`SELECT * FROM bookings WHERE user_id = ${userId}`;
     return bookings;
+}
+
+export async function getBookingByUserId(userId: string) {
+    const booking = await sql`SELECT * FROM bookings WHERE user_id = ${userId} ORDER BY created_at DESC `;
+    return booking;
 }

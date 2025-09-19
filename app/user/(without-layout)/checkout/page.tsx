@@ -284,6 +284,10 @@ export default function CheckoutPage() {
                                         </PopoverContent>
                                     </Popover>
                                 )}
+
+                                {"date" in (state?.errors || {}) && (
+                                    <p className="text-red-500">{state.errors?.date}</p>
+                                )}
                                 {bookingType === "month" && (
                                     <Popover open={open} onOpenChange={setOpen}>
                                         <PopoverTrigger asChild>

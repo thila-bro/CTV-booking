@@ -29,14 +29,13 @@
     "jose": "^6.1.0",
     "js-cookies": "^1.0.4",
     "lucide-react": "^0.542.0",
-    "mongodb": "^6.18.0",
     "next": "latest",
     "next-auth": "5.0.0-beta.25",
     "postcss": "8.5.1",
-    "postgres": "^3.4.6",
+    "postgres": "^3.4.7",
     "react": "latest",
     "react-datepicker": "^8.7.0",
-    "react-day-picker": "^9.9.0",
+    "react-day-picker": "^9.10.0",
     "react-dom": "latest",
     "react-square-web-payments-sdk": "3.2.4-beta.1",
     "square": "^43.0.2",
@@ -44,8 +43,8 @@
     "tailwindcss": "3.4.17",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.7.3",
-    "use-debounce": "^10.0.4",
-    "zod": "^3.25.17"
+    "use-debounce": "^10.0.6",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

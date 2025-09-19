@@ -16,6 +16,7 @@ import React, { useState as reactUseState } from 'react';
 // Depending on the size of the application, this would be stored in a database.
 const links = [
   { name: 'Home', href: '/admin', icon: HomeIcon },
+  { name: 'Availability', href: '/admin/availability', icon: HomeIcon },
   // {
   //   name: 'Invoices',
   //   href: '/admin/invoices',
