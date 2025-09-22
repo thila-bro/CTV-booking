@@ -4,8 +4,6 @@
 import { getTempBookingByIdRepo } from "@/repositories/temp-booking";
 import { addHourBooking, addDayBooking, addMonthBooking } from "@/repositories/booking";
 import { addBulkAvailability, addDayBookingAvailability } from "@/repositories/availability";
-import { addDays, isSaturday, isSunday } from "date-fns";
-import { constructFromSymbol } from "date-fns/constants";
 import { getActiveWeekdaysInRange } from "@/lib/global";
 
 
@@ -13,12 +11,14 @@ export async function paymentSuccessAction(preBookingId: string, responseData: a
     const preBookingData = await getTempBookingByIdRepo(preBookingId);
 
     if (!preBookingData) {
-        throw new Error("Pre-booking not found");
+        // throw new Error("Pre-booking not found");
+        console.error("Pre-booking not found");
+        return;
     }
 
     switch (preBookingData.type) {
         case "hour":
-            await addHourBooking({
+            const hourBooking = await addHourBooking({
                 user_id: preBookingData.user_id,
                 space_id: preBookingData.space_id,
                 date: preBookingData.date,
@@ -34,13 +34,15 @@ export async function paymentSuccessAction(preBookingId: string, responseData: a
 
             await addDayBookingAvailability({
                 spaceId: preBookingData.space_id,
+                bookingId: hourBooking.db.id,
                 date: preBookingData.date,
                 startTime: preBookingData.start_time,
                 endTime: preBookingData.end_time,
                 type: preBookingData.type
             });
+            break;
         case "day":
-            await addDayBooking({
+            const dayBooking = await addDayBooking({
                 user_id: preBookingData.user_id,
                 space_id: preBookingData.space_id,
                 start_date: preBookingData.start_date,
@@ -56,14 +58,16 @@ export async function paymentSuccessAction(preBookingId: string, responseData: a
             const dates = getActiveWeekdaysInRange(new Date(preBookingData.start_date), new Date(preBookingData.end_date));
             const availabilities = dates.map(date => ({
                 space_id: preBookingData.space_id,
+                booking_id: dayBooking.db.id,
                 date,
                 start_time: "00:00",
                 end_time: "23:59",
                 type: preBookingData.type
             }));
             await addBulkAvailability(availabilities);
+            break;
         case "month":
-            await addMonthBooking({
+            const monthBooking = await addMonthBooking({
                 user_id: preBookingData.user_id,
                 space_id: preBookingData.space_id,
                 start_date: preBookingData.start_date,
@@ -79,11 +83,13 @@ export async function paymentSuccessAction(preBookingId: string, responseData: a
             const monthDates = getActiveWeekdaysInRange(new Date(preBookingData.start_date), new Date(preBookingData.end_date));
             const monthAvailabilities = monthDates.map(date => ({
                 space_id: preBookingData.space_id,
+                booking_id: monthBooking.db.id,
                 date,
                 start_time: "00:00",
                 end_time: "23:59",
                 type: preBookingData.type
             }));
             await addBulkAvailability(monthAvailabilities);
+            break;
     }
 }

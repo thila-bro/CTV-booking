@@ -86,6 +86,7 @@ export default function CheckoutPage() {
     useEffect(() => {
         const fetchSpace = async () => {
             const spaceData = await findSpaceByIdRepo(spaceId);
+            console.log(spaceData);
             setSpace(spaceData as SpaceType);
         };
         fetchSpace();
@@ -339,37 +340,6 @@ export default function CheckoutPage() {
                                     </div>
                                 </div>
                             )}
-                            {/* {bookingType === "day" && (
-                                <div className="mb-4">
-                                    <Label htmlFor="num_days" className="block mb-1">Number of Days</Label>
-                                    <Input
-                                        type="number"
-                                        id="num_days"
-                                        name="num_days"
-                                        min={1}
-                                        max={30}
-                                        value={numDays}
-                                        onChange={e => setNumDays(Number(e.target.value))}
-                                        required
-                                    />
-                                </div>
-                            )}
-                            {bookingType === "month" && (
-                                <div className="mb-4">
-                                    <Label htmlFor="num_months" className="block mb-1">Number of Months</Label>
-                                    <Input
-                                        type="number"
-                                        id="num_months"
-                                        name="num_months"
-                                        min={1}
-                                        max={12}
-                                        value={numMonths}
-                                        onChange={e => setNumMonths(Number(e.target.value))}
-                                        required
-                                    />
-                                </div>
-                            )} */}
-
                             {state?.message && !state?.success && (
                                 <div className="flex mt-2 items-center text-red-600 ">
                                     <p aria-live="polite">{state.message}</p>
@@ -390,11 +360,7 @@ export default function CheckoutPage() {
                                     ).map((img, idx) => (
                                         <CarouselItem key={idx}>
                                             <div className="p-1">
-                                                <Card>
-                                                    <CardContent className="flex aspect-square items-center justify-center p-6">
-                                                        <img src={img} alt={`Space image ${idx + 1}`} className="object-cover w-full h-full rounded-lg" />
-                                                    </CardContent>
-                                                </Card>
+                                                <img src={`/${img?.image_url}`} alt={`Space image ${idx + 1}`} className="object-cover rounded-lg" />
                                             </div>
                                         </CarouselItem>
                                     ))}
