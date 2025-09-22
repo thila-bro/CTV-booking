@@ -41,7 +41,7 @@ export default function CheckoutPage() {
     const spaceId = searchParams.get("spaceId") || "";
 
     const currentDate = new Date();
-    const pickerStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1);
+    const pickerStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
     const maxPickerDate = new Date(currentDate.getTime() + 21 * 24 * 60 * 60 * 1000);
 
     type SpaceType = {

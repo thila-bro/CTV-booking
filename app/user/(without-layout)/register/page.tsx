@@ -1,13 +1,15 @@
 'use client'
 
 import {
-    CheckCircleIcon,
-    ExclamationCircleIcon
+    CheckCircleIcon    
 } from '@heroicons/react/24/outline';
-import { Button } from '@/app/ui/button';
+import { Button } from '@/components/ui/button';
 import Form from 'next/form';
 import { useActionState } from 'react';
 import { addUser } from '../action';
+import Link from 'next/link';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 
 const initialState = {
@@ -28,10 +30,10 @@ export default function UserLoginForm() {
                 </h2>
                 <Form action={formAction} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <Label className="block text-sm font-medium text-gray-700">
                             First Name
-                        </label>
-                        <input
+                        </Label>
+                        <Input
                             name="firstName"
                             type="firstName"
                             placeholder="John"
@@ -40,14 +42,14 @@ export default function UserLoginForm() {
 
                         />
                         {state?.errors?.firstName && (
-                            <p className="text-red-500">{state.errors.firstName}</p>
+                            <Label className="text-red-500">{state.errors.firstName}</Label>
                         )}
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <Label className="block text-sm font-medium text-gray-700">
                             Last Name
-                        </label>
-                        <input
+                        </Label>
+                        <Input
                             name="lastName"
                             type="lastName"
                             placeholder="Doe"
@@ -56,14 +58,14 @@ export default function UserLoginForm() {
 
                         />
                         {state?.errors?.lastName && (
-                            <p className="text-red-500">{state.errors.lastName}</p>
+                            <Label className="text-red-500">{state.errors.lastName}</Label>
                         )}
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <Label className="block text-sm font-medium text-gray-700">
                             Mobile Number
-                        </label>
-                        <input
+                        </Label>
+                        <Input
                             name="mobile"
                             type="mobile"
                             placeholder="(123) 456-7890"
@@ -72,14 +74,14 @@ export default function UserLoginForm() {
 
                         />
                         {state?.errors?.mobile && (
-                            <p className="text-red-500">{state.errors.mobile}</p>
+                            <Label className="text-red-500">{state.errors.mobile}</Label>
                         )}
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <Label className="block text-sm font-medium text-gray-700">
                             Email
-                        </label>
-                        <input
+                        </Label>
+                        <Input
                             name="email"
                             type="email"
                             placeholder="john.doe@email.com"
@@ -88,14 +90,14 @@ export default function UserLoginForm() {
 
                         />
                         {state?.errors?.email && (
-                            <p className="text-red-500">{state.errors.email}</p>
+                            <Label className="text-red-500">{state.errors.email}</Label>
                         )}
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <Label className="block text-sm font-medium text-gray-700">
                             Password
-                        </label>
-                        <input
+                        </Label>
+                        <Input
                             name="password"
                             type="password"
                             placeholder="••••••••"
@@ -103,14 +105,14 @@ export default function UserLoginForm() {
 
                         />
                         {state?.errors?.password && (
-                            <p className="text-red-500">{state.errors.password}</p>
+                            <Label className="text-red-500">{state.errors.password}</Label>
                         )}
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <Label className="block text-sm font-medium text-gray-700">
                             Retype Password
-                        </label>
-                        <input
+                        </Label>
+                        <Input
                             name="confirmPassword"
                             type="password"
                             placeholder="••••••••"
@@ -118,7 +120,7 @@ export default function UserLoginForm() {
 
                         />
                         {state?.errors?.confirmPassword && (
-                            <p className="text-red-500">{state.errors.confirmPassword}</p>
+                            <Label className="text-red-500">{state.errors.confirmPassword}</Label>
                         )}
                     </div>
                     {state?.success && (
@@ -127,9 +129,15 @@ export default function UserLoginForm() {
                             <p aria-live="polite">{state.message}</p>
                         </div>
                     )}
-                    <Button className="w-full rounded-md bg-gray-600 py-2 px-4 text-white hover:bg-gray-700 focus:outline-none" disabled={pending}>
+                    <Button className="w-full rounded-md py-2 px-4 " disabled={pending}>
                         Register
                     </Button>
+                    <p className="mt-4 text-center text-sm text-gray-600">
+                        Already have an account?{' '}
+                        <Link href="/user/login" className="font-semibold">
+                            Login
+                        </Link>
+                    </p>
                 </Form>
             </div>
         </div>

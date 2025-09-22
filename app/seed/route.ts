@@ -191,6 +191,7 @@ async function seedAvailability() {
     CREATE TABLE IF NOT EXISTS availability (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       space_id UUID REFERENCES spaces(id),
+      booking_id UUID REFERENCES bookings(id),
       date DATE NOT NULL,
       start_time TIME NOT NULL,
       end_time TIME NOT NULL,
@@ -239,15 +240,14 @@ export async function GET() {
   try {
     const result = await sql.begin(async (sql) => [
       await seedCategories(),
-
-
       await seedSpaces(),
+      await seedBookings(),
       seedSpaceImages(),
       seedUsers(),
       seedAdmins(),
       seedTempBookings(),
       seedAvailability(),
-      seedBookings(),
+      
 
 
       // seedBookings(),

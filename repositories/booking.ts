@@ -2,6 +2,10 @@ import { sql } from "@/lib/pgsqlConnector";
 
 
 export async function addHourBooking(booking: any) {
+    if (!booking.date) {
+        throw new Error("Booking date is required for hour bookings");
+    }
+
     const [insertBooking] = await sql`
         INSERT INTO bookings (id, user_id, space_id, date, start_time, end_time, duration, total_price, payment_reference, payment_response, type, payment_status)
         VALUES (${crypto.randomUUID()}, ${booking.user_id}, ${booking.space_id}, CAST(${booking.date} AS DATE), CAST(${booking.start_time} AS TIME), CAST(${booking.end_time} AS TIME), ${booking.duration}, ${booking.total_price}, ${booking.payment_reference}, ${booking.payment_response}, ${booking.type}, ${booking.payment_status})
@@ -34,6 +38,14 @@ export async function getUserBookings(userId: string) {
 }
 
 export async function getBookingByUserId(userId: string) {
-    const booking = await sql`SELECT * FROM bookings WHERE user_id = ${userId} ORDER BY created_at DESC `;
-    return booking;
+    const bookings = await sql`
+        SELECT 
+            b.*,
+            row_to_json(s) AS space
+        FROM bookings b
+        LEFT JOIN spaces s ON b.space_id = s.id
+        WHERE b.user_id = ${userId}
+        ORDER BY b.created_at DESC
+    `;
+    return bookings;
 }

@@ -3,6 +3,11 @@
 import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { getAvailabilityData } from "./action";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
 
 
 export default function AvailabilityPage() {
@@ -21,8 +26,8 @@ export default function AvailabilityPage() {
             return;
         }
         setLoading(true);
-        
         getAvailabilityData(selectedDate).then((data) => {
+            console.log("Fetched availability data:", data);
             if (data) {
                 setAvailability(data);
             }
@@ -55,6 +60,7 @@ export default function AvailabilityPage() {
                                 <th className="py-2 px-4 text-left">End Time</th>
                                 <th className="py-2 px-4 text-left">Type</th>
                                 <th className="py-2 px-4 text-left">Status</th>
+                                <th className="py-2 px-4 text-left">Customer</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -69,11 +75,27 @@ export default function AvailabilityPage() {
                             ) : (
                                 availability.map((a) => (
                                     <tr key={a.id} className="border-b">
-                                        <td className="py-2 px-4">{a.space?.name || a.space_id}</td>
+                                        <td className="py-2 px-4">
+                                            {a.space.name}
+                                        </td>
                                         <td className="py-2 px-4">{a.start_time}</td>
                                         <td className="py-2 px-4">{a.end_time}</td>
                                         <td className="py-2 px-4 capitalize">{a.type}</td>
                                         <td className="py-2 px-4">{a.status}</td>
+                                        <td className="py-2 px-4">
+                                            <Popover>
+                                                <PopoverTrigger>
+                                                    <button className="text-blue-500">{a.user.first_name} {a.user.last_name}</button>
+                                                </PopoverTrigger>
+                                                <PopoverContent>
+                                                    <div>
+                                                        <h3 className="font-bold">{a.user.first_name} {a.user.last_name}</h3>
+                                                        <a href={`mailto:${a.user.email}`}>Email: {a.user.email}</a> <br />
+                                                        <a href={`tel:${a.user.mobile}`}>Phone: {a.user.mobile}</a>
+                                                    </div>
+                                                </PopoverContent>
+                                            </Popover>
+                                        </td>
                                     </tr>
                                 ))
                             )}

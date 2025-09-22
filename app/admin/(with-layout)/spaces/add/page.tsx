@@ -2,15 +2,15 @@
 
 import {
     ExclamationCircleIcon,
-    CheckCircleIcon
 } from '@heroicons/react/24/outline';
 import { useActionState } from 'react';
-import { addSpace } from '../action';
-import { useState, useRef, useEffect } from 'react';
+import { addSpace } from '../all/action';
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from '@radix-ui/react-label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { toast } from 'sonner';
 
 const initialState = {
     success: false,
@@ -37,39 +37,18 @@ export default function AddSpaceForm() {
         formAction(formData);
     };
 
-    
-    // const formRef = useRef<HTMLFormElement>(null);
-
-    // if (state?.success && formRef.current) {
-    //     console.log('Resetting form after successful submission');
-    //     formRef.current.reset();
-    //     setStartTime('08:00:00');
-    //     setEndTime('15:00:00');
-    //     setPricePerHrEnabled(true);
-    //     setPricePerDayEnabled(false);
-    //     setPricePerMonthEnabled(false);
-    // }
-    // useEffect(() => {
-
-    //     if (state?.success) {
-    //         console.log('Form submitted successfully:', state);
-    //     }
-    //     if (state?.success && formRef.current) {
-    //         console.log('Resetting form after successful submission');
-    //         formRef.current.reset();
-    //         setStartTime('08:00:00');
-    //         setEndTime('15:00:00');
-    //         setPricePerHrEnabled(true);
-    //         setPricePerDayEnabled(false);
-    //         setPricePerMonthEnabled(false);
-    //     }
-    // }, [initialState.success]);
+    if (state?.success) {
+        state.success = false; // Reset success state to prevent repeated toasts
+        state.message = ''; // Reset message state
+        toast.success("Space added successfully!");
+    } 
 
 
     return (
         <form
             // ref={formRef}
-            onSubmit={handleSubmit}
+            // onSubmit={handleSubmit}
+            action={formAction}
             className="mx-auto bg-white p-8 rounded-lg shadow space-y-6"
             encType="multipart/form-data"
         >
@@ -248,12 +227,12 @@ export default function AddSpaceForm() {
                 </div>
             )}
 
-            {state?.success && (
+            {/* {state?.success && (
                 <div className="flex mt-2 items-center text-green-600 ">
                     <CheckCircleIcon className="h-5 w-5 mr-2" />
                     <p aria-live="polite">{state.message}</p>
                 </div>
-            )}
+            )} */}
 
             <div className="pt-4">
                 <Button

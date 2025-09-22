@@ -1,5 +1,5 @@
 
-import SpaceTable from '../../../ui/admin/spaces-table';
+import SpaceTable from '../../../../ui/admin/spaces-table';
 
 const spaces = [];
 

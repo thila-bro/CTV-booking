@@ -34,7 +34,7 @@ export default function Page() {
     }
 
     return (
-        <div className="max-w-4xl mx-auto p-8">
+        <div className="mx-auto p-8">
             <h2 className="text-2xl font-bold mb-6">Your Bookings</h2>
             <div className="overflow-x-auto">
                 <table className="min-w-full bg-white rounded shadow">
@@ -54,9 +54,15 @@ export default function Page() {
                                 <td className="py-2 px-4">{booking.space?.name || "Space"}</td>
                                 <td className="py-2 px-4 capitalize">{booking.type}</td>
                                 <td className="py-2 px-4">
-                                    {booking.type === "hourly" && booking.date}
-                                    {booking.type === "daily" && `${booking.start_date} - ${booking.end_date}`}
-                                    {booking.type === "monthly" && `${booking.month_start} - ${booking.month_end}`}
+                                    {booking.type === "hour" && (booking.date ? new Date(booking.date).toLocaleDateString() : "--")}
+                                    {booking.type === "day" &&
+                                        (booking.start_date && booking.end_date
+                                            ? `${new Date(booking.start_date).toLocaleDateString()} - ${new Date(booking.end_date).toLocaleDateString()}`
+                                            : "--")}
+                                    {booking.type === "month" &&
+                                        (booking.month_start && booking.month_end
+                                            ? `${booking.month_start} - ${booking.month_end}`
+                                            : "--")}
                                 </td>
                                 <td className="py-2 px-4 text-sm">
                                     {booking.type === "hour" && (

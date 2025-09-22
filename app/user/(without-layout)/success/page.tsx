@@ -5,6 +5,7 @@ import { getTempBookingByIdWithUserNSpaceRepo, deleteTempBookingByIdRepo } from 
 import { Row } from "postgres";
 import { formatTime } from "@/lib/global";
 import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
 
 
 export default function SuccessPage() {
@@ -110,18 +111,19 @@ export default function SuccessPage() {
 
                 {/* Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4">
-                    <button
+                    <Button
                         onClick={() => router.push("/")}
-                        className="flex-1 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow hover:bg-indigo-700 transition"
+                        className="flex-1 py-3 font-semibold rounded-lg transition"
                     >
                         Back to Home
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         onClick={() => router.push("/user/bookings")}
-                        className="flex-1 py-3 border border-gray-300 rounded-lg hover:bg-gray-100 transition"
+                        className="flex-1 py-3 font-semibold rounded-lg transition"
+                        variant="secondary"
                     >
                         View My Bookings
-                    </button>
+                    </Button>
                 </div>
             </div>
         </main>

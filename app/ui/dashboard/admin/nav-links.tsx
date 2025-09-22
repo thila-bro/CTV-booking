@@ -5,12 +5,14 @@ import {
   HomeIcon,
   DocumentDuplicateIcon,
   BriefcaseIcon,
+  UserIcon
 } from '@heroicons/react/24/outline';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import React, { useState as reactUseState } from 'react';
+import path from 'path';
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
@@ -29,10 +31,11 @@ const links = [
     icon: BriefcaseIcon,
     children: [
       { name: 'Add Spaces', href: '/admin/spaces/add' },
-      { name: 'All Spaces', href: '/admin/spaces' },
+      { name: 'All Spaces', href: '/admin/spaces/all' },
     ],
 
   },
+  { name: 'Admins', href: '/admin/admins', icon: UserIcon },
 ];
 
 export default function NavLinks() {
@@ -91,8 +94,13 @@ export default function NavLinks() {
                   onClick={() => toggleMenu(link.name)}
                   className={clsx(
                     'flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3',
+                    // {
+                    //   'bg-sky-100 text-blue-600': pathname === link.href,
+                    // },
                     {
-                      'bg-sky-100 text-blue-600': pathname === link.href,
+                      'bg-sky-100 text-blue-600':
+                        pathname === link.href ||
+                        (link.children && link.children.some(child => pathname === child.href)),
                     },
                   )}
                 >
@@ -110,11 +118,11 @@ export default function NavLinks() {
                           className={clsx(
                             'flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3',
                             {
-                              'bg-sky-100 text-blue-600': pathname === link.href,
+                              'bg-sky-100 text-blue-600': pathname === child.href,
                             },
                           )}
                         >
-                          
+
                           {child.name}
                         </Link>
                       </li>
