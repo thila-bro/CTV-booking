@@ -27,7 +27,7 @@ export async function addBulkAvailability(availabilities: any[]) {
         RETURNING id;
     `;
     return insertedAvailabilities;
-} 
+}
 
 export async function checkSpaceAvailabilityByDateAndTimeRepo(spaceId: string, date: string, startTime: string, endTime: string) {
     const bookings = await sql`SELECT * FROM availability WHERE (space_id = ${spaceId} AND date = CAST(${date} AS DATE)) AND ((start_time, end_time) OVERLAPS (CAST(${startTime} AS TIME), CAST(${endTime} AS TIME))) ORDER BY start_time ASC`;
@@ -39,7 +39,7 @@ export async function checkSpaceAvailabilityByDateAndTimeRangeRepo(spaceId: stri
     return bookings;
 }
 
-export async function getAvailabilityByDate(date: Date) {
+export async function getAvailabilityByDate(date: string) {
     const availability = await sql`
     SELECT a.*, 
     row_to_json(b) AS booking,

@@ -103,6 +103,13 @@ export default function SpaceTable() {
                     </tr>
                 </thead>
                 <tbody>
+                    {spaces.length === 0 && (
+                        <tr>
+                            <td colSpan={12} className="py-4 text-center text-gray-500">
+                                No spaces available.
+                            </td>
+                        </tr>
+                    )}
                     {spaces.map((space: any, index) => (
                         <tr key={space.id}>
                             <td className='px-4 py-2 border-b'>{(index + 1).toString().padStart(3, '0')}</td>
@@ -145,8 +152,8 @@ export default function SpaceTable() {
                                         id="is_price_per_hr_enabled"
                                         name="is_price_per_hr_enabled"
                                         checked={editedValues.is_price_per_hr_enabled ?? pricePerHrEnabled}
-                                        onCheckedChange={(checked) => setEditedValues({ 
-                                            ...editedValues, 
+                                        onCheckedChange={(checked) => setEditedValues({
+                                            ...editedValues,
                                             is_price_per_hr_enabled: checked === true,
                                             price_per_hr: checked === true ? editedValues.price_per_hr ?? space.price_per_hr : null
                                         })}
@@ -179,10 +186,10 @@ export default function SpaceTable() {
                                         id="is_price_per_day_enabled"
                                         name="is_price_per_day_enabled"
                                         checked={editedValues.is_price_per_day_enabled ?? pricePerDayEnabled}
-                                        onCheckedChange={(checked) => setEditedValues({ 
-                                            ...editedValues, 
-                                            is_price_per_day_enabled: checked === true, 
-                                            price_per_day: checked === true ? editedValues.price_per_day ?? space.price_per_day : null 
+                                        onCheckedChange={(checked) => setEditedValues({
+                                            ...editedValues,
+                                            is_price_per_day_enabled: checked === true,
+                                            price_per_day: checked === true ? editedValues.price_per_day ?? space.price_per_day : null
                                         })}
                                     />
                                 ) : (
@@ -213,11 +220,11 @@ export default function SpaceTable() {
                                         id="is_price_per_month_enabled"
                                         name="is_price_per_month_enabled"
                                         checked={editedValues.is_price_per_month_enabled ?? pricePerMonthEnabled}
-                                        onCheckedChange={(checked) => setEditedValues({ 
-                                            ...editedValues, 
+                                        onCheckedChange={(checked) => setEditedValues({
+                                            ...editedValues,
                                             is_price_per_month_enabled: checked === true,
-                                            price_per_month: checked === true ? editedValues.price_per_month ?? space.price_per_month : null 
-                                        })} 
+                                            price_per_month: checked === true ? editedValues.price_per_month ?? space.price_per_month : null
+                                        })}
                                     />
                                 ) : (
                                     space.is_price_per_month_enabled ? 'Yes' : 'No'

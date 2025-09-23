@@ -6,6 +6,7 @@ const Admin = [
     name: 'User',
     email: 'a@a.com',
     password: '123',
+    is_superadmin: true,
   },
 ];
 

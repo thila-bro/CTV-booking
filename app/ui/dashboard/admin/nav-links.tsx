@@ -11,7 +11,7 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
-import React, { useState as reactUseState } from 'react';
+import React, { Children, useState as reactUseState } from 'react';
 import path from 'path';
 
 // Map of links to display in the side navigation.
@@ -35,7 +35,15 @@ const links = [
     ],
 
   },
-  { name: 'Admins', href: '/admin/admins', icon: UserIcon },
+  {
+    name: 'Admins',
+    href: '/admin/admins',
+    icon: UserIcon,
+    children: [
+      { name: 'Add Admin', href: '/admin/admins/add' },
+      { name: 'All Admins', href: '/admin/admins/all' }
+    ]
+  },
 ];
 
 export default function NavLinks() {

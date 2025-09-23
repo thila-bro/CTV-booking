@@ -1,7 +1,7 @@
 "use server";
 
 import { createSession, deleteSession } from "@/lib/session";
-import { AdminLoginSchema } from "@/models/AdminLogin";
+import { AdminLoginSchema } from "@/models/Admin";
 import { findAdminByEmailRepo } from "@/repositories/admin";
 import bcrypt from 'bcrypt';
 import { redirect, RedirectType } from 'next/navigation';
@@ -19,6 +19,10 @@ export async function AdminLogin(prevState: any, formData: FormData) {
 
     if (!admin) {
         return { message: "No user found with this email." };
+    }
+
+    if (!admin.is_active) {
+        return { message: "Your account is inactive. Please contact support." };
     }
 
     const isPasswordValid = await bcrypt.compare(password, admin.password);

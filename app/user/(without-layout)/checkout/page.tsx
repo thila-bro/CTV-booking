@@ -86,7 +86,6 @@ export default function CheckoutPage() {
     useEffect(() => {
         const fetchSpace = async () => {
             const spaceData = await findSpaceByIdRepo(spaceId);
-            console.log(spaceData);
             setSpace(spaceData as SpaceType);
         };
         fetchSpace();

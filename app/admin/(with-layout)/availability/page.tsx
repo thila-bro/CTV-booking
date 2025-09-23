@@ -3,22 +3,28 @@
 import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { getAvailabilityData } from "./action";
+import { Calendar } from "@/components/ui/calendar";
+import { Label } from "@/components/ui/label";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import { Button } from "@/components/ui/button";
+import { format, set } from "date-fns";
+
 
 
 export default function AvailabilityPage() {
     const [availability, setAvailability] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+    const [open, setOpen] = useState(false);
 
     // Handler for date change
-    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedDate(new Date(e.target.value));
-    };
+    // const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     setSelectedDate(new Date(e.target.value));
+    // };
 
     useEffect(() => {
         if (!selectedDate) {
@@ -26,8 +32,7 @@ export default function AvailabilityPage() {
             return;
         }
         setLoading(true);
-        getAvailabilityData(selectedDate).then((data) => {
-            console.log("Fetched availability data:", data);
+        getAvailabilityData(format(selectedDate, "yyyy-MM-dd")).then((data) => {
             if (data) {
                 setAvailability(data);
             }
@@ -40,13 +45,42 @@ export default function AvailabilityPage() {
             <h2 className="text-2xl font-bold mb-6">Space Availability by Date</h2>
             <div className="mb-6 flex items-center gap-4">
                 <label htmlFor="date" className="font-medium">Pick a date:</label>
-                <Input
+                {/* <Input
                     type="date"
                     id="date"
                     value={selectedDate.toISOString().split('T')[0]}
                     onChange={handleDateChange}
                     className="w-48"
-                />
+                /> */}
+                <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="outline"
+                            id="date"
+                            className="justify-between font-normal"
+                        >
+                            {selectedDate ? format(selectedDate, "PPP") : "Select date"}
+                            {/* <ChevronDownIcon /> */}
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                        <Calendar
+                            mode="single"
+                            selected={selectedDate || undefined}
+                            captionLayout="dropdown"
+                            onSelect={(d) => {
+                                setSelectedDate(d || new Date());
+                                setOpen(false);
+                            }}
+                        // disabled={(d) =>
+                        //     d < pickerStartDate ||
+                        //     d > maxPickerDate ||
+                        //     d.getDay() === 0 ||
+                        //     d.getDay() === 6
+                        // }
+                        />
+                    </PopoverContent>
+                </Popover>
             </div>
             {loading ? (
                 <div>Loading...</div>
@@ -56,6 +90,7 @@ export default function AvailabilityPage() {
                         <thead>
                             <tr className="bg-gray-100">
                                 <th className="py-2 px-4 text-left">Space</th>
+                                <th className="py-2 px-4 text-left">Date</th>
                                 <th className="py-2 px-4 text-left">Start Time</th>
                                 <th className="py-2 px-4 text-left">End Time</th>
                                 <th className="py-2 px-4 text-left">Type</th>
@@ -78,6 +113,7 @@ export default function AvailabilityPage() {
                                         <td className="py-2 px-4">
                                             {a.space.name}
                                         </td>
+                                        <td className="py-2 px-4">{format(a.date, "PPP")}</td>
                                         <td className="py-2 px-4">{a.start_time}</td>
                                         <td className="py-2 px-4">{a.end_time}</td>
                                         <td className="py-2 px-4 capitalize">{a.type}</td>

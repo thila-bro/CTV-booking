@@ -60,8 +60,6 @@ export default function PaymentSummaryPage() {
         );
     }
 
-    console.log("tempBooking2", bookingType);
-
     return (
         <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
             <h2 className="text-2xl font-bold mb-4 text-center">Payment Summary</h2>
@@ -107,8 +105,14 @@ export default function PaymentSummaryPage() {
             </div>
 
             <PayPalScriptProvider
+                // options={{
+                //     clientId: "AQpxi8gzTkeEY7jxKS2f3L_FUPEYkSnNSoylO3GhMhHmcENQBcCzOJ2aGzWLgDSjv2pzo2p8EjWpPRKQ",
+                //     currency: "AUD",
+                //     intent: "capture",
+                //     components: "buttons,funding-eligibility",
+                // }}
                 options={{
-                    clientId: "AQpxi8gzTkeEY7jxKS2f3L_FUPEYkSnNSoylO3GhMhHmcENQBcCzOJ2aGzWLgDSjv2pzo2p8EjWpPRKQ",
+                    clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID as string,
                     currency: "AUD",
                     intent: "capture",
                     components: "buttons,funding-eligibility",

@@ -23,7 +23,6 @@ export default function PublishedSpacesList() {
     useEffect(() => {
         setIsLoading(true);
         getAllSpacesRepo().then((data) => {
-            console.log(data);
             setSpaces(data);
             setIsLoading(false);
         });
