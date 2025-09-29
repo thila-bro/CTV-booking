@@ -1,11 +1,12 @@
 'use server'
 
 import { addSpaceRepo } from '@/repositories/spaces';
-import { addSpaceImageRepo } from '@/repositories/space-images';
+import { addSpaceImageRepo, deleteSpaceImageRepo, getImageDataById, getSpaceImagesRepo } from '@/repositories/space-images';
 import { spacesImageDir } from '@/lib/constant';
 import path from 'path';
 import fs from 'fs/promises';
 import { SpaceSchema } from '@/models/Space';
+import crypto from "crypto";
 
 
 export async function addSpace(prevState: any, formData: FormData) {
@@ -45,10 +46,15 @@ export async function addSpace(prevState: any, formData: FormData) {
             if (image.size === 0) continue;
             const bytes = await image.arrayBuffer();
             const buffer = Buffer.from(bytes);
-            const filePath = path.join(uploadDir, image.name);
+
+            // Generate a unique filename to avoid conflicts
+            const ext = path.extname(image.name);
+            const uniqueName = `${Date.now()}-${crypto.randomBytes(6).toString("hex")}${ext}`;
+            const filePath = path.join(uploadDir, uniqueName);
+
             await fs.writeFile(filePath, buffer);
-            imagePaths.push(`${spacesImageDir}/${image.name}`);
-            await addSpaceImageRepo(response.db.id, `${spacesImageDir}/${response.db.id}/${image.name}`);
+            imagePaths.push(`${spacesImageDir}/${uniqueName}`);
+            await addSpaceImageRepo(response.db.id, `${spacesImageDir}/${response.db.id}/${uniqueName}`);
         }
 
         return {
@@ -56,4 +62,40 @@ export async function addSpace(prevState: any, formData: FormData) {
             success: true
         }
     }
+}
+
+export async function deleteSpaceImage(imageId: string) {
+    const ImageData = await getImageDataById(imageId);
+    const imagePath = path.join(process.cwd(), 'public', spacesImageDir, ImageData.space_id, path.basename(ImageData.image_url));
+    try {
+        await fs.unlink(imagePath);
+        await deleteSpaceImageRepo(imageId);
+    } catch (error) {
+        console.error("Error deleting image file:", error);
+    }
+    return { message: "Image deleted successfully", success: true };
+}
+
+export async function uploadSpaceImages(formData: FormData) {
+    const spaceId = formData.get("spaceId") as string;
+    const images = formData.getAll("images") as File[];
+    if (!spaceId || images.length === 0) {
+        return { message: "No images to upload", success: false };
+    }
+    const uploadDir = path.join(process.cwd(), 'public', `${spacesImageDir}`, spaceId);
+    await fs.mkdir(uploadDir, { recursive: true });
+    const imagePaths: string[] = [];
+    for (const image of images) {
+        if (image.size === 0) continue;
+        const bytes = await image.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        // Generate a unique filename to avoid conflicts
+        const ext = path.extname(image.name);
+        const uniqueName = `${Date.now()}-${crypto.randomBytes(6).toString("hex")}${ext}`;
+        const filePath = path.join(uploadDir, uniqueName);
+        await fs.writeFile(filePath, buffer);
+        imagePaths.push(`${spacesImageDir}/${spaceId}/${uniqueName}`);
+        await addSpaceImageRepo(spaceId, `${spacesImageDir}/${spaceId}/${uniqueName}`);
+    }
+    return { message: "Images uploaded successfully", success: true, images: imagePaths, data: await getSpaceImagesRepo(spaceId) };
 }

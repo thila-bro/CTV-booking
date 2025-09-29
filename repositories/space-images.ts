@@ -19,3 +19,20 @@ export async function getSpaceImagesRepo(space_id: string) {
     `;
     return result;
 }
+
+export async function deleteSpaceImageRepo(imageId: string) {
+    const result = await sql`
+        DELETE FROM space_images
+        WHERE id = ${imageId}
+        RETURNING id
+    `;
+    return result[0];
+}
+
+export async function getImageDataById(imageId: string) {
+    const result = await sql`
+        SELECT * FROM space_images
+        WHERE id = ${imageId}
+    `;
+    return result[0];
+}

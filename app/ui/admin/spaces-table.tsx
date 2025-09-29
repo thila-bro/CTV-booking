@@ -98,7 +98,7 @@ export default function SpaceTable() {
                         <th className="px-4 py-2 border-b text-left">Per Month</th>
                         <th className="px-4 py-2 border-b text-left">Start Time</th>
                         <th className="px-4 py-2 border-b text-left">End Time</th>
-                        <th className="px-4 py-2 border-b text-left">Images</th>
+                        {/* <th className="px-4 py-2 border-b text-left">Images</th> */}
                         <th className="px-4 py-2 border-b text-left">Action</th>
                     </tr>
                 </thead>
@@ -125,7 +125,15 @@ export default function SpaceTable() {
                                         onChange={(e) => handleChange(e, 'name')}
                                     />
                                 ) : (
-                                    space.name
+                                    <td className="px-4 py-2 ">
+                                        <Link 
+                                        className='hover:text-gray-600'
+                                        href={{
+                                            pathname: `images`,
+                                            query: { spaceId: space.id }
+                                        }}>{space.name}</Link>
+
+                                    </td>
                                 )}
                             </td>
                             <td className="px-4 py-2 border-b">
@@ -261,12 +269,12 @@ export default function SpaceTable() {
                                 )}
                             </td>
 
-                            <td className="px-4 py-2 border-b">
+                            {/* <td className="px-4 py-2 border-b">
                                 <Link href={{
-                                    pathname: `spaces/images/${space.id}`,
+                                    pathname: `images`,
                                     query: { spaceId: space.id }
                                 }}>All Images</Link>
-                            </td>
+                            </td> */}
                             <td className="px-4 py-2 border-b">
                                 <div className='flex'>
                                     {editingRowId === space.id ? (
