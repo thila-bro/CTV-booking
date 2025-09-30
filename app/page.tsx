@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 import { userSessionCookieName } from '@/lib/constant';
 import Link from 'next/link';
 import PublishedSpacesList from './ui/root/spaces';
-import { sendTestEmail2 } from '@/lib/email';
 
 
 export default function Home() {
@@ -16,8 +15,6 @@ export default function Home() {
     // Check user login status (this is a placeholder, replace with actual logic)
     const userLoggedIn = document.cookie.includes(userSessionCookieName);
     setIsUserLoggedIn(userLoggedIn);
-
-    sendTestEmail2();
   }, []);
 
   return (
