@@ -203,7 +203,7 @@ export async function GET() {
       // seedBookings(),
       // seedCustomers(),
       // seedInvoices(),
-      // seedRevenue(),
+      seedRevenue(),
       // seedSpaces(),
       // seedSpaceImages(),
     ]);

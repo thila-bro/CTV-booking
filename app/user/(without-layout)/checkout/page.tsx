@@ -3,21 +3,19 @@
 import Autoplay from "embla-carousel-autoplay";
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { findSpaceByIdRepo } from "@/repositories/spaces";
-import { dateFormat } from "@/lib/global";
 import { useActionState } from "react";
 import { checkSpaceAvailability } from "./action";
 import { Calendar } from "@/components/ui/calendar";
 import { MonthRangePicker } from "@/components/ui/monthrangepicker";
-import { format, differenceInDays, differenceInMonths } from "date-fns";
+import { format, differenceInMonths } from "date-fns";
 import { type DateRange } from "react-day-picker";
 import { countActiveWeekdays } from "@/lib/global";
-import { startOfMonth, endOfMonth } from "date-fns";
+import { endOfMonth } from "date-fns";
 import {
     Carousel,
     CarouselContent,

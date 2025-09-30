@@ -6,6 +6,7 @@ import { Row } from "postgres";
 import { formatTime } from "@/lib/global";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { sendTestEmail2 } from "@/lib/email";
 
 
 export default function SuccessPage() {
@@ -28,6 +29,7 @@ export default function SuccessPage() {
                 setTempBooking(data);
                 deleteTempBookingByIdRepo(preBookingId as string);
                 setIsLoading(false);
+                sendTestEmail2(data);
             });
         }
     }, [preBookingId]);

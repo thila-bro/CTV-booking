@@ -11,6 +11,7 @@ import { addTempHrBookingRepo, addTempDayBookingRepo, addTempMonthBookingRepo } 
 
 
 export async function checkSpaceAvailability(prevState: any, formData: FormData) {
+    
     const bookingType = formData.get("bookingType");
     const date = formData.get("date") as string;
     const startTime = formData.get("start_time") as string;

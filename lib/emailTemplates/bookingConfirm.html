@@ -1,0 +1,48 @@
+<table
+    style="width:100%;max-width:600px;margin:auto;background:#fff;border-radius:8px;box-shadow:0 2px 8px #eee;font-family:sans-serif;">
+    <tr>
+        <td style="background:#121216;padding:24px 0;text-align:center;border-radius:8px 8px 0 0;">
+            <h1 style="color:#fff;margin:0;font-size:2rem;">CTV Booking Confirmation</h1>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding:32px;">
+            <p style="font-size:1.1rem;color:#333;">Hi <b>{{name}}</b>,</p>
+            <p style="font-size:1rem;color:#333;">Thank you for your booking! Here are your details:</p>
+            <ul style="padding-left:20px;color:#444;">
+                <li><b>Space:</b> {{spaceName}}</li>
+                <li><b>Category:</b> {{category}}</li>
+                <li><b>Date:</b> {{date}}</li>
+                <!-- Hourly booking -->
+                {{#ifHour}}
+                <li><b>Time:</b> {{startTime}} - {{endTime}}</li>
+                {{/ifHour}}
+                <!-- Daily booking -->
+                {{#ifDay}}
+                <li><b>Total Days:</b> {{duration}}</li>
+                {{/ifDay}}
+                <!-- Monthly booking -->
+                {{#ifMonth}}
+                <li><b>Months:</b> {{duration}}</li>
+                {{/ifMonth}}
+                <li><b>Total Price:</b> ${{totalPrice}}</li>
+            </ul>
+            <p style="margin-top:24px;color:#2563eb;">We look forward to seeing you!</p>
+        </td>
+    </tr>
+    <tr>
+        <td style="background:#f3f4f6;padding:16px;text-align:center;border-radius:0 0 8px 8px;color:#888;">
+            <small>CTV Booking &copy; 2025</small>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding:0 32px 32px 32px;">
+            <div
+                style="margin-top:32px;padding:16px;background:#f9fafb;border-radius:6px;color:#555;font-size:0.95rem;">
+                <small><b>Note:</b> This is a system-generated email. Please do not reply to this message. For any
+                    inquiries,
+                    contact us via the website or support email.</small>
+            </div>
+        </td>
+    </tr>
+</table>
